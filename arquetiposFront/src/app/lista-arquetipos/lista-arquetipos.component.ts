@@ -12,14 +12,17 @@ export class ListaArquetiposComponent implements OnInit {
   constructor( private conexBack: ConexionBackendService) { }
 
   ngOnInit() {
-    this.conexBack.enviarArchivo("hola qlos");
+    //this.conexBack.enviarArchivo("hola qlos");
   }
 
   fileToUpload: File = null;
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    console.log( this.fileToUpload)
+
+    this.conexBack.enviarArchivo(this.fileToUpload).subscribe(data => console.log(data));
+
+
   }
 
 }

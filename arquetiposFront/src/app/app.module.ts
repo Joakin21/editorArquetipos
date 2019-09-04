@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { EditorArquetiposComponent } from './editor-arquetipos/editor-arquetipos.component';
@@ -14,7 +15,8 @@ import { ListaArquetiposComponent } from './lista-arquetipos/lista-arquetipos.co
     ListaArquetiposComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

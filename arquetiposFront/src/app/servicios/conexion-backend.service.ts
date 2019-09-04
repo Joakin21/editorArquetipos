@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConexionBackendService {
 
-  constructor() { }
+  url_import = 'http://127.0.0.1:8000/import/';
 
-  enviarArchivo(archivo:string){
+  constructor(private httpClient:HttpClient) { }
 
-    console.log(archivo);
+  enviarArchivo(fileToUpload: File){
+
+    const formData: FormData = new FormData();
+    formData.append('fileKey', fileToUpload, fileToUpload.name);
+    
+    return this.httpClient.post<any>(this.url_import,formData);
   }
 }
