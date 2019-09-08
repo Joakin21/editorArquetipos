@@ -19,8 +19,8 @@ export class ListaArquetiposComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-
-    this.conexBack.enviarArchivo(this.fileToUpload).subscribe(data => console.log(data));
+    if(this.fileToUpload)
+      this.conexBack.enviarArchivo(this.fileToUpload).subscribe(data => console.log(data));
 
 
   }

@@ -13,7 +13,7 @@ export class ConexionBackendService {
   enviarArchivo(fileToUpload: File){
 
     const formData: FormData = new FormData();
-    formData.append('fileKey', fileToUpload, fileToUpload.name);
+    formData.append('xml', fileToUpload, fileToUpload.name);
     
     return this.httpClient.post<any>(this.url_import,formData);
   }
