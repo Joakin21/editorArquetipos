@@ -1,7 +1,12 @@
-<div class="bg-primary p-2">
+<div class="p-2" id="listaArqueripos">
     <h2 class="text-center">Mis Arquetipos</h2>
     <!--<button (click)="importacionArchivos()">importar</button>-->
     <div class="form-group">
-        <input type="file" id="file" name="fileupload" value="fileupload" (change)="handleFileInput($event.target.files)">
+        <input type="file" id="file" name="fileupload" value="fileupload" (change)="importarArchivo($event.target.files)">
     </div>
+    <!--<a routerLink="/editor"><button > Nuevo Arquetipor</button></a>-->
+    <!--PROBANDO DIV-->
+    <!--<div class="d-inline bg-success mr-1">Inline</div>
+    <div class="d-inline bg-success">Inline</div>-->
+
 </div>

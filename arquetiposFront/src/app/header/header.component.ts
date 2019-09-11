@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class HeaderComponent implements OnInit {
 
   constructor() { }
-  titulo:string = "Editor de Arquetiṕos"
+  titulo:string = "Editor de Arquetipos"
   ngOnInit() {
   }
 

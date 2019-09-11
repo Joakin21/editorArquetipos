@@ -92,8 +92,9 @@ DATABASES = {
 """DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'myDataBase',
+        'NAME': 'mongoapp',
     }
+}
     
 }"""
 
