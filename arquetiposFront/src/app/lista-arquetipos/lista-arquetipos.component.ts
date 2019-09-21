@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ConexionBackendService} from '../servicios/conexion-backend.service'
 import { from } from 'rxjs';
 import {Router} from '@angular/router';
+import {SeleccionArquetipoService} from '../servicios/seleccion-arquetipo.service'
 
 
 var routerLink
@@ -12,7 +13,7 @@ var routerLink
 })
 export class ListaArquetiposComponent implements OnInit {
 
-  constructor(private router: Router,private conexBack: ConexionBackendService) { }
+  constructor(private router: Router,private conexBack: ConexionBackendService, private elegirArquetipo: SeleccionArquetipoService) { }
 
   arquetipos: string[] = []
 
@@ -37,10 +38,13 @@ export class ListaArquetiposComponent implements OnInit {
       this.conexBack.enviarArchivo(this.fileToUpload).subscribe(data => this.agregarArquetipoDiv(data));
 
   }
-  saludar(){
-    this.router.navigateByUrl('/editor');
+  seleccionarArquetipo(arquetipo:any){
+    //this.elegirArquetipo.setArquetipo(arquetipo)
+    this.elegirArquetipo.asignar(arquetipo)
+    
   }
-  agregarArquetipoDiv(titulo){
+  agregarArquetipoDiv(arquetipo: any){
+    var titulo = arquetipo["items"][0][0];
     var newArquetipoDiv = document.createElement("div"); 
     newArquetipoDiv.style.backgroundColor="white";
     newArquetipoDiv.style.width="200px";
@@ -54,7 +58,9 @@ export class ListaArquetiposComponent implements OnInit {
 
     var editorButton = document.createElement("BUTTON");
     editorButton.innerHTML = "Editar";
-    editorButton.addEventListener ("click", (evt) => this.saludar());
+    editorButton.addEventListener ("click", (evt) => this.seleccionarArquetipo(arquetipo));
+    editorButton.addEventListener ("click", (evt) => this.router.navigateByUrl('/editor'));
+    
     editorButton.style.padding="5px 24px";
 
     var padreDiv = document.getElementById("listaArqueripos"); 

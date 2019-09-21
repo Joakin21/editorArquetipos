@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+#from editor.models import 
 
 def recolectarAttribution(root):
     for etiqueta in root.findall('{http://schemas.openehr.org/v1}description'):    
@@ -66,4 +67,4 @@ def procesarXML(file):
     estructuraProcesada["description"] = recolectarDescription(root)#description
     estructuraProcesada["items"] = recolectarItems(root)#all_items  
     
-    return estructuraProcesada["items"][0][0] #por ahora devuelve solo el nombre
+    return estructuraProcesada #por ahora devuelve solo el nombre

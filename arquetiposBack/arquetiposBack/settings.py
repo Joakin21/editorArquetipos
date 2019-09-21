@@ -82,21 +82,22 @@ WSGI_APPLICATION = 'arquetiposBack.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-"""DATABASES = {
+"""
+DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'mongoapp',
     }
 }
     
-}"""
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

@@ -28,7 +28,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
-            
+              "node_modules/jsplumb/dist/js/jsplumb.js"
             ]
           },
           "configurations": {
