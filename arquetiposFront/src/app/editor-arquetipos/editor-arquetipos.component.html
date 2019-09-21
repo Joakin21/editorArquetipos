@@ -1,25 +1,19 @@
 
-<app-menu></app-menu>
+<app-menu [arquetipoElegido]="nombre_arquetipo"></app-menu>
 
 <div>
     <h4>Diagrama</h4>
     <!--<div id="objeto1">{{arquetipo["items"][0][0]}}</div>
     <div id="objeto2">div2</div>-->
-    <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="alignleft">
-              <div class="customBox" id="Source">
-                Source
-              </div>
-            </div>
-            <div class="alignright">
-              <div class="customBox" id="Target1">
-                Target 1
-              </div>
-            </div>
-            <div style="clear: both;"></div>
-          </div>
-        </div>
+    
+
+    <div class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas">
+      <div class="window" id="chartWindow1">{{nombre_arquetipo}}</div>
+      <div class="window" id="chartWindow2">Items</div>
+      <!--<div class="window" id="chartWindow3">window three</div>
+      <div class="window" id="chartWindow4">window four</div>
+      <div class="window" id="chartWindow5">window five</div>
+      <div class="window" id="chartWindow6">window six</div>-->
     </div>
+
 </div>
