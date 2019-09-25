@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {ConexionBackendService} from '../servicios/conexion-backend.service'
-import { from } from 'rxjs';
 import {Router} from '@angular/router';
 import {SeleccionArquetipoService} from '../servicios/seleccion-arquetipo.service'
-
+import { CrearObjetoService } from '../servicios/crear-objeto.service'
 
 var routerLink
 @Component({
@@ -13,20 +12,11 @@ var routerLink
 })
 export class ListaArquetiposComponent implements OnInit {
 
-  constructor(private router: Router,private conexBack: ConexionBackendService, private elegirArquetipo: SeleccionArquetipoService) { }
+  constructor(private router: Router,private conexBack: ConexionBackendService, private elegirArquetipo: SeleccionArquetipoService, private crearObjeto: CrearObjetoService) { }
 
   arquetipos: string[] = []
 
   ngOnInit() {
-    
-    /*var newArquetipoDiv = document.createElement("div"); 
-    newArquetipoDiv.className += "d-inline bg-success mr-1"
-    var newContent = document.createTextNode("Hola!¿Qué tal?"); 
-    newArquetipoDiv.appendChild(newContent); 
-    var padreDiv = document.getElementById("listaArqueripos"); 
-    padreDiv.appendChild(newArquetipoDiv);*/
-    
-    //document.body.insertBefore(newArquetipoDiv, currentDiv);
   
   }
 
@@ -39,34 +29,18 @@ export class ListaArquetiposComponent implements OnInit {
 
   }
   seleccionarArquetipo(arquetipo:any){
-    //this.elegirArquetipo.setArquetipo(arquetipo)
     this.elegirArquetipo.asignar(arquetipo)
-    
   }
   agregarArquetipoDiv(arquetipo: any){
-    var titulo = arquetipo["items"][0][0];
-    var newArquetipoDiv = document.createElement("div"); 
-    newArquetipoDiv.style.backgroundColor="white";
-    newArquetipoDiv.style.width="200px";
-    newArquetipoDiv.style.height="100px";
-    newArquetipoDiv.style.margin="1em";
-    newArquetipoDiv.style.display="inline-block";
-    newArquetipoDiv.style.textAlign="center";
-    //newArquetipoDiv.className += "h-75 d-inline bg-info mr-1"    
-    var arqTitulo = document.createTextNode(titulo); 
-    //<a routerLink="/editor"><button > Nuevo Arquetipor</button></a>
 
-    var editorButton = document.createElement("BUTTON");
-    editorButton.innerHTML = "Editar";
+    var titulo = arquetipo["items"][0][0];
+    var newArquetipoDiv = this.crearObjeto.crearArquetipoDiv(titulo)
+    var editorButton = this.crearObjeto.crearBotonArquetipoDiv()
     editorButton.addEventListener ("click", (evt) => this.seleccionarArquetipo(arquetipo));
     editorButton.addEventListener ("click", (evt) => this.router.navigateByUrl('/editor'));
     
-    editorButton.style.padding="5px 24px";
-
+    
     var padreDiv = document.getElementById("listaArqueripos"); 
-
-
-    newArquetipoDiv.appendChild(arqTitulo); 
     newArquetipoDiv.appendChild(editorButton);
     padreDiv.appendChild(newArquetipoDiv);
   }

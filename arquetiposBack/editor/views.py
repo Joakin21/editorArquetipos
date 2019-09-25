@@ -8,9 +8,7 @@ from editor.fileXmlManager import procesarXML
 @api_view(['GET', 'POST'])
 def mensajesList(request):
     if request.method == 'POST':
-        #print(request.FILES["fileKey"].read())
         archivoProcesado = procesarXML(request.FILES["xml"])
-        #print(procesarXML(request.FILES["fileKey"]))
         return Response(archivoProcesado)
 
     return Response({"message": "Hello, world!"})

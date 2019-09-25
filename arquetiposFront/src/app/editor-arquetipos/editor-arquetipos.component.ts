@@ -2,6 +2,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import {SeleccionArquetipoService} from '../servicios/seleccion-arquetipo.service'
 import { jsPlumb } from 'jsplumb';
 import { CrearObjetoService } from '../servicios/crear-objeto.service'
+import { AlertPromise } from 'selenium-webdriver';
+
+declare var $:any;
 
 @Component({
   selector: 'app-editor-arquetipos',
@@ -12,34 +15,53 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
 
   constructor(private elegirArquetipo: SeleccionArquetipoService, private crearObjeto: CrearObjetoService) { }
 
-  arquetipo:any;
-  nombre_arquetipo:string;
+  arquetipo:any
+  nombre_arquetipo:string
+
+  item_seleccionado_titulo:string
+  item_seleccionado_detalles:string 
   
   dibujarItems(arquetipo){
     //console.log(arquetipo["items"])
     var nombre_items = []
     var espacio_entre_items=0
     var myContainer = document.getElementById("canvas");
-    for (var i=1; i< arquetipo["items"].length; i++){
+    for (let i=1; i< arquetipo["items"].length; i++){
       //console.log(arquetipo["items"][i][0])
       var newItem = this.crearObjeto.crearItem("chartWindow"+(i+2).toString(),5,1+espacio_entre_items)
       espacio_entre_items += 10
       var item_titulo = document.createTextNode(arquetipo["items"][i][0]);
+      
+      newItem.addEventListener("dblclick", (evt) => this.openModal(i));
+
       newItem.appendChild(item_titulo)
       myContainer.appendChild(newItem)
     }
+    
  
+  }
+  openModal(posicion_item){
+    //alert("Se abrira modal para el item "+ posicion_item)
+    this.item_seleccionado_titulo = this.arquetipo["items"][posicion_item][0]
+    this.item_seleccionado_detalles = this.arquetipo["items"][posicion_item][1]
+    $('#modalItems').modal('show');
+    console.log(this.arquetipo["items"][posicion_item][1])
   }
   
   ngOnInit() {
     this.elegirArquetipo.currentArquetipo.subscribe(data => this.arquetipo = data)
     this.nombre_arquetipo = this.arquetipo["items"][0][0]
+    console.log(this.arquetipo)
     
   }
   ngAfterViewInit(){
     this.dibujarItems(this.arquetipo)
+
     var jsPlumbInstance = jsPlumb.getInstance();
     this.connectSourceToTargetUsingJSPlumb(jsPlumb,jsPlumbInstance,this.arquetipo)
+
+    var item1 = document.getElementById("chartWindow3"); 
+    //item1.addEventListener("click", (evt) => this.openModal((item1.id).charAt((item1.id).length-1)));
     
   }
 

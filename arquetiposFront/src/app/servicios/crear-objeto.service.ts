@@ -38,4 +38,32 @@ export class CrearObjetoService {
     return newItem
   }
 
+  crearArquetipoDiv(titulo:string):any{
+
+    //Creacion del div arquetipo
+    var newArquetipoDiv = document.createElement("div"); 
+    newArquetipoDiv.style.backgroundColor="white";
+    newArquetipoDiv.style.width="200px";
+    newArquetipoDiv.style.margin="1em";
+    newArquetipoDiv.style.display="inline-block";
+    newArquetipoDiv.style.textAlign="center";
+    //Creacion del titulo del div arquetipo
+    var arqTitulo = document.createTextNode(titulo);
+    var myTitle = document.createElement("p");
+    myTitle.appendChild(arqTitulo);
+    //Creacion de espacio
+    var espacio = document.createElement("br");
+    newArquetipoDiv.appendChild(myTitle); 
+    newArquetipoDiv.appendChild(espacio);
+
+    return newArquetipoDiv
+  }
+
+  crearBotonArquetipoDiv():any{
+    var editorButton = document.createElement("BUTTON");
+    editorButton.innerHTML = "Editar";
+    editorButton.style.width="10em";
+    return editorButton
+  }
+
 }

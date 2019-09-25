@@ -67,4 +67,4 @@ def procesarXML(file):
     estructuraProcesada["description"] = recolectarDescription(root)#description
     estructuraProcesada["items"] = recolectarItems(root)#all_items  
     
-    return estructuraProcesada #por ahora devuelve solo el nombre
+    return estructuraProcesada 
