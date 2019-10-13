@@ -14,12 +14,20 @@ export class ListaArquetiposComponent implements OnInit {
 
   constructor(private router: Router,private conexBack: ConexionBackendService, private elegirArquetipo: SeleccionArquetipoService, private crearObjeto: CrearObjetoService) { }
 
-  arquetipos: string[] = []
+  arquetipos: any[]
 
   ngOnInit() {
-  
+    
+    this.conexBack.getArquetipos().subscribe(resp => this.arquetiposFromDB(resp));
+    
   }
-
+  arquetiposFromDB(arquetipos:any[]){
+    
+    for (let arq of arquetipos) {
+      this.agregarArquetipoDiv(arq)
+   }
+    //this.agregarArquetipoDiv(arquetipos[0])
+  }
   fileToUpload: File = null;
 
   importarArchivo(files: FileList) {
@@ -31,14 +39,17 @@ export class ListaArquetiposComponent implements OnInit {
   seleccionarArquetipo(arquetipo:any){
     this.elegirArquetipo.asignar(arquetipo)
   }
+  //esta pasando el id n veces
   agregarArquetipoDiv(arquetipo: any){
-
-    var titulo = arquetipo["items"][0][0];
+    console.log(arquetipo)
+    var titulo = arquetipo["nombre"]
     var newArquetipoDiv = this.crearObjeto.crearArquetipoDiv(titulo)
     var editorButton = this.crearObjeto.crearBotonArquetipoDiv()
-    editorButton.addEventListener ("click", (evt) => this.seleccionarArquetipo(arquetipo));
+    //Hacer un post a los arquetipos y luego enviarlo al editor
+
+
+    editorButton.addEventListener ("click", (evt) => this.seleccionarArquetipo(arquetipo["id"]));
     editorButton.addEventListener ("click", (evt) => this.router.navigateByUrl('/editor'));
-    
     
     var padreDiv = document.getElementById("listaArqueripos"); 
     newArquetipoDiv.appendChild(editorButton);

@@ -3,6 +3,7 @@ import {SeleccionArquetipoService} from '../servicios/seleccion-arquetipo.servic
 import { jsPlumb } from 'jsplumb';
 import { CrearObjetoService } from '../servicios/crear-objeto.service'
 import { AlertPromise } from 'selenium-webdriver';
+import {ConexionBackendService} from '../servicios/conexion-backend.service'
 
 declare var $:any;
 
@@ -13,9 +14,11 @@ declare var $:any;
 })
 export class EditorArquetiposComponent implements OnInit,AfterViewInit {
 
-  constructor(private elegirArquetipo: SeleccionArquetipoService, private crearObjeto: CrearObjetoService) { }
+  constructor(private elegirArquetipo: SeleccionArquetipoService, private crearObjeto: CrearObjetoService,private conexBack: ConexionBackendService) { }
 
-  arquetipo:any
+  arquetipo:any = null
+  arquetipo_id:string
+
   nombre_arquetipo:string
 
   item_seleccionado_titulo:string
@@ -49,24 +52,25 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   }
   
   ngOnInit() {
-    this.elegirArquetipo.currentArquetipo.subscribe(data => this.arquetipo = data)
-    this.nombre_arquetipo = this.arquetipo["items"][0][0]
-    console.log(this.arquetipo)
+    //Post (obtengo arquetipo segun el id)
+    this.elegirArquetipo.currentArquetipo.subscribe(id_arq => {
+      this.arquetipo_id = id_arq
+      
+      
+    })
     
   }
+
   ngAfterViewInit(){
-    this.dibujarItems(this.arquetipo)
-
     var jsPlumbInstance = jsPlumb.getInstance();
-    this.connectSourceToTargetUsingJSPlumb(jsPlumb,jsPlumbInstance,this.arquetipo)
-
-    var item1 = document.getElementById("chartWindow3"); 
-    //item1.addEventListener("click", (evt) => this.openModal((item1.id).charAt((item1.id).length-1)));
+    this.conexBack.getArquetipoById(this.arquetipo_id).subscribe(arquetipo =>{
+      this.dibujarItems(arquetipo),
+      this.connectSourceToTargetUsingJSPlumb(jsPlumb,jsPlumbInstance,arquetipo)
+    })
     
   }
 
   connectSourceToTargetUsingJSPlumb(jsPlumb, jsPlumbInstance, arquetipo) {
-    
     var color = "gray";
     jsPlumbInstance.connect({
         Connector: [ "Bezier", { curviness: 50 } ],

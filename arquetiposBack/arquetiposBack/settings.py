@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     "http://localhost:4200",
 )
@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'arquetiposBack.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -97,6 +97,8 @@ DATABASES = {
         'NAME': 'mongoapp',
     }
 }
+"""
+
     
 
 

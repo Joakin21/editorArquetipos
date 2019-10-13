@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
-#from editor.models import 
+
+
 
 def recolectarAttribution(root):
     for etiqueta in root.findall('{http://schemas.openehr.org/v1}description'):    
@@ -53,18 +54,22 @@ def recolectarItems(root):
         atributos_item = []
     return all_items
 
-def procesarXML(file):
+def procesarXML(arq_collection,file):
     tree = ET.parse(file)
     root = tree.getroot()
     estructuraProcesada = {}
     
 
     tipo_arquetipo = root.find('{http://schemas.openehr.org/v1}definition').find('{http://schemas.openehr.org/v1}rm_type_name').text
-    
-    print(tipo_arquetipo)
- 
+
+    items = recolectarItems(root)
+
+    estructuraProcesada["nombre"] = items[0][0]
     estructuraProcesada["atribution"] = recolectarAttribution(root)#atribution
     estructuraProcesada["description"] = recolectarDescription(root)#description
-    estructuraProcesada["items"] = recolectarItems(root)#all_items  
-    
-    return estructuraProcesada 
+    estructuraProcesada["items"] = items #all_items  
+    #inserto estructura a mongo y obtengo id
+    idArq = arq_collection.insert_one(estructuraProcesada).inserted_id
+
+    #devuelvo nombre del arquetipo y su id
+    return {"id":str(idArq),"nombre":estructuraProcesada["nombre"]} 
