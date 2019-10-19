@@ -3,19 +3,25 @@
 
 <div>
     <h4>Diagrama</h4>
-    <!--<div id="objeto1">{{arquetipo["items"][0][0]}}</div>
-    <div id="objeto2">div2</div>-->
-    
-
-    <div class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas">
-      <div class="window" id="chartWindow1">{{nombre_arquetipo}}</div>
-      <div class="window" id="chartWindow2">Items</div>
-      <!--<div class="window" id="chartWindow3">window three</div>
-      <div class="window" id="chartWindow4">window four</div>
-      <div class="window" id="chartWindow5">window five</div>
-      <div class="window" id="chartWindow6">window six</div>-->
+    <form #f2="ngForm" (ngSubmit)="agregarNodo(f2,myJsPlumb)" novalidate>
+      <div class="form-group">
+        <input type="text" class="form-control" name="nodo" ngModel #nodo="ngModel" placeholder="nombre nodo">
+      </div>
+      <button type="submit" class="btn btn-primary">agregar</button>
+    </form>
+    <br>
+    <!--<div class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas"></div>-->
+    <div class="row">
+      <div class="col-2">
+        <div id="panelFiguras">
+          <!--IMAGEN-->
+          <img id="drag1" draggable="true" (dragstart)="drag($event)" src="assets/circuloPrueba.jpg" width="50" height="50">
+        </div>
+      </div>
+      <div class="col-10">
+        <div (drop)="drop($event)" (dragover)="allowDrop($event)"class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas"></div>
+      </div>
     </div>
-
 </div>
 
 <!-- Modal -->

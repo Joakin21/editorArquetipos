@@ -1,8 +1,3 @@
-#panelFiguras{
-    border: 1px solid #CCC;
-    height: 100%;
-}
-
 .demo {
     /* for IE10+ touch devices */
     touch-action:none;
@@ -21,16 +16,6 @@
     color:orange;
 }
 
-/** ELEMENT POSITIONS **/
-#chartWindow1 { left:50em; top:9em; }
-#chartWindow2 { left:40em;top:40em; }
-/*#chartWindow3 { left:40em;top:18em;}
-
-#chartWindow4 { left:4em;top:30em;}
-#chartWindow5 { left:22em;top:30em;}
-#chartWindow6 { left:47em;top:30em;}
-#chartWindow7 { top:18em;left:46em;}
-#chartWindow8 { left:63em;top:38em;}*/
 
 
 .window {
@@ -68,4 +53,3 @@
 }
 
 path, .jtk-endpoint { cursor:pointer; }
-

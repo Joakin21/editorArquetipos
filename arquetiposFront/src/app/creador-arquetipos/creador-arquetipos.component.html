@@ -1,0 +1,12 @@
+<app-menu [arquetipoElegido]="nombre_arquetipo"></app-menu>
+
+<div>
+    <h4>Crear Arquetipo</h4>
+    <form #f2="ngForm" (ngSubmit)="agregarNodo(f2,myJsPlumb)" novalidate>
+        <div class="form-group">
+          <input type="text" class="form-control" name="nodo" ngModel #nodo="ngModel" placeholder="nombre nodo">
+        </div>
+        <button type="submit" class="btn btn-primary">agregar</button>
+      </form>
+    <div class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas"></div>
+</div>
