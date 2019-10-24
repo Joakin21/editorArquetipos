@@ -1,3 +1,12 @@
+#panelFiguras{
+    border: 1px solid #CCC;
+    height: 100%;
+    background-color:white;
+}
+#creador{
+    background-color: #F1F3CE;
+}
+
 .demo {
     /* for IE10+ touch devices */
     touch-action:none;

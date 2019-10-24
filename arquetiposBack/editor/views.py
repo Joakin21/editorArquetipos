@@ -20,6 +20,7 @@ def listaArquetipos():
         arq["_id"] = str(arq["_id"])
         arquetipo["id"] = arq["_id"]
         arquetipo["nombre"] = arq["nombre"]
+        arquetipo["tipo"] = arq["tipo"]
         aArquetipos.append(arquetipo)
         arquetipo = {}
     return aArquetipos

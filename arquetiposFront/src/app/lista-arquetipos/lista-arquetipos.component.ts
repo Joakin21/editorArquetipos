@@ -39,14 +39,12 @@ export class ListaArquetiposComponent implements OnInit {
   seleccionarArquetipo(arquetipo:any){
     this.elegirArquetipo.asignar(arquetipo)
   }
-  //esta pasando el id n veces
+
   agregarArquetipoDiv(arquetipo: any){
     console.log(arquetipo)
     var titulo = arquetipo["nombre"]
     var newArquetipoDiv = this.crearObjeto.crearArquetipoDiv(titulo)
     var editorButton = this.crearObjeto.crearBotonArquetipoDiv()
-    //Hacer un post a los arquetipos y luego enviarlo al editor
-
 
     editorButton.addEventListener ("click", (evt) => this.seleccionarArquetipo(arquetipo["id"]));
     editorButton.addEventListener ("click", (evt) => this.router.navigateByUrl('/editor'));

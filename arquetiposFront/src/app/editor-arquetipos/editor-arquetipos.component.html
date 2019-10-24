@@ -1,24 +1,27 @@
 
 <app-menu [arquetipoElegido]="nombre_arquetipo"></app-menu>
 
-<div>
-    <h4>Diagrama</h4>
-    <form #f2="ngForm" (ngSubmit)="agregarNodo(f2,myJsPlumb)" novalidate>
+<div id="editor">
+    <h4 class="text-center">Diagrama</h4>
+    <!--<form #f2="ngForm" (ngSubmit)="agregarNodo(f2,myJsPlumb)" novalidate>
       <div class="form-group">
         <input type="text" class="form-control" name="nodo" ngModel #nodo="ngModel" placeholder="nombre nodo">
       </div>
       <button type="submit" class="btn btn-primary">agregar</button>
     </form>
-    <br>
+    <br>-->
     <!--<div class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas"></div>-->
     <div class="row">
-      <div class="col-2">
+      <div class="col-md-12 col-lg-2">
         <div id="panelFiguras">
+          <h4>Figuras</h4>
           <!--IMAGEN-->
-          <img id="drag1" draggable="true" (dragstart)="drag($event)" src="assets/circuloPrueba.jpg" width="50" height="50">
+          <img id="figura1" draggable="true" (dragstart)="drag($event)" src="assets/base.png">
+          <img id="figura2" draggable="true" (dragstart)="drag($event)" src="assets/estructural.png">
+          <img id="figura3" draggable="true" (dragstart)="drag($event)" src="assets/terminal.png">
         </div>
       </div>
-      <div class="col-10">
+      <div class="col-md-12 col-lg-10">
         <div (drop)="drop($event)" (dragover)="allowDrop($event)"class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas"></div>
       </div>
     </div>
@@ -29,13 +32,13 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{item_seleccionado_titulo}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{nodo_seleccionado_titulo}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        {{item_seleccionado_detalles}}
+        {{nodo_seleccionado_detalles}}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
