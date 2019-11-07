@@ -26,6 +26,7 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   
   contador_nodos= 0
   jsPlumbInstance:any = null
+  myContainer:any
   
   allowDrop(ev:any) {
     ev.preventDefault();
@@ -65,8 +66,155 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   /*dibujarNodosEnLista(estructura,xInicio,yInicio){
 
   }*/
+  /*primeraPasada(obj,x_padre, profundidad){//determina la x en primera instancia
+    var x_inicial = 0
+    var id_nodo = 1
+    var aumentar_profundidad = false
+    profundidad = profundidad +1
+    for (var k in obj)
+    {
+        if (typeof obj[k] == "object" && obj[k] !== null){
+            obj[k]["x"] = x_inicial
+            //dibujar con respecto al  x padre
+            var X = (x_inicial + x_padre)*10
+            var Y = profundidad*5
+            var nodo = this.crearObjeto.crearNodo("chartWindow"+(id_nodo).toString(),X,Y,"figura2")
+            var nodo_titulo = document.createTextNode(obj[k]["text"]);
+            this.dibujarNodo(this.myContainer, nodo, nodo_titulo)
+            console.log(profundidad)
+            id_nodo = id_nodo + 1 
+            x_inicial = x_inicial + 1
+
+            this.primeraPasada(obj[k],obj[k]["x"],profundidad);
+        }
+        //else
+            // do something... 
+    }
+  }*/
+  segundaPasada(obj){//determina la x considerando distancia de los nodos hijos y padres
+    var keys = Object.keys(obj)
+    //console.log(keys)
+    for (var i=0; i< keys.length; i++)
+    {
+        if (typeof obj[keys[i]] == "object" && obj[keys[i]] !== null){
+
+            //console.log(obj[keys[i]])
+            
+
+            var keys_son = Object.keys(obj[keys[i]])
+
+            for (var j=0; j< keys_son.length; j++){
+              //Si el hijo del actual es un objeto
+              if (typeof obj[keys[i]][keys_son[j]] == "object" && obj[keys[i]][keys_son[j]] !== null){
+                //obtengo el x del ultimo nodo
+                var x_ultimo = obj[keys[i]][keys_son[keys_son.length-2]]["x"]
+                //le doy x+1 al hermano del padre de ese nodo hijo
+                //console.log("hermano")
+                if(obj[keys[i+1]] && typeof obj[keys[i+1]] == "object" && obj[keys[i+1]] !== null){//si tiene hermano
+                  console.log("hermano: ", obj[keys[i+1]]["text"])
+                  obj[keys[i+1]]["x"] = x_ultimo + obj[keys[i]]["x"] + 1
+                }
+                
+                //obj[keys[i+1]]["x"] = x_ultimo
+              }
+            }
+            
+            
+            this.segundaPasada(obj[keys[i]]);
+            
+        }
+        //else
+            // do something... 
+    }
+  }
+
+  primeraPasada(obj){//determina la x en primera instancia
+    var x_inicial = 0
+
+    for (var k in obj)
+    {
+        if (typeof obj[k] == "object" && obj[k] !== null){
+            obj[k]["x"] = x_inicial
+
+            x_inicial = x_inicial + 1
+
+            this.primeraPasada(obj[k]);
+        }
+
+    }
+
+  }
+  terceraPasada(obj,x_padre, profundidad){//dibuja los nodos y determina su profundidad
+
+    var id_nodo = 1
+    profundidad = profundidad +1
+    for (var k in obj)
+    {
+        if (typeof obj[k] == "object" && obj[k] !== null){
+            //dibujar con respecto al  x padre
+            var X = (obj[k]["x"] + x_padre)*10
+            var Y = profundidad*5
+            var nodo = this.crearObjeto.crearNodo("chartWindow"+(id_nodo).toString(),X,Y,"figura2")
+            var nodo_titulo = document.createTextNode(obj[k]["text"]);
+            this.dibujarNodo(this.myContainer, nodo, nodo_titulo)
+            //console.log(profundidad)
+            id_nodo = id_nodo + 1 
+
+            this.terceraPasada(obj[k],obj[k]["x"],profundidad);
+        }
+
+    }
+
+  }
+
   dibujarArquetipoImportado(arquetipo){
+    var estructuras = Object.keys(arquetipo)
+    delete arquetipo[estructuras[estructuras.length-1]];
+    delete arquetipo[estructuras[estructuras.length-2]];
+    console.log(arquetipo)
+    this.primeraPasada(arquetipo)
+    this.segundaPasada(arquetipo)
+    this.terceraPasada(arquetipo,0, 0)
+    console.log(arquetipo)
+    /*for (var k in arquetipo)
+    {
+      
+      if (typeof arquetipo[k] == "object" && arquetipo[k] !== null){
+        console.log(arquetipo[k])
+
+        for (var q in arquetipo[k]){
+          
+          if (typeof arquetipo[k][q] == "object" && arquetipo[k][q] !== null){
+            console.log(typeof arquetipo[k][q])
+          }
+        }
+      }
+
+    }*/
+    /*var myContainer = document.getElementById("canvas");
+    var espacio_entre_nodos=3
+    var un_espacio = 3
+    var height_nodo = 3
+    //coloco nodo base root
+    var nodo_base = this.crearObjeto.crearNodo("chartWindow1",4,espacio_entre_nodos,"figura1")
+    var nodo_base_titulo = document.createTextNode(arquetipo["nombre_arquetipo"]);
+    this.dibujarNodo(myContainer, nodo_base, nodo_base_titulo)
+    //recorre e imprime estructuras siguientes
+    var estructuras = Object.keys(arquetipo).slice(2);
+    var comenzar_desde = this.contador_nodos +1
+    for (let i=0; i< estructuras.length; i++){
+      var nodo_estructura = this.crearObjeto.crearNodo("chartWindow"+(i+comenzar_desde).toString(),20,espacio_entre_nodos,"figura2")
+      var nodo_estructura_titulo = document.createTextNode(arquetipo[estructuras[i]]["nombre_estructura"]);
+      this.dibujarNodo(myContainer, nodo_estructura, nodo_estructura_titulo)
+      espacio_entre_nodos = espacio_entre_nodos + un_espacio + height_nodo
+    }
+    //intenta bajar la posicion del nodo base
+    console.log(((estructuras.length-1)*espacio_entre_nodos))
+    nodo_base.style.top =  ((estructuras.length-1)*un_espacio + un_espacio).toString()+"em";
+    */
+    //for (let i=1; i< arquetipo["items"].length; i++)
     //console.log(arquetipo["items"])
+    /*
     console.log(arquetipo)
     var espacio_entre_nodos=0
     var myContainer = document.getElementById("canvas");
@@ -130,7 +278,7 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
         this.dibujarNodo(myContainer, newItem, item_titulo)
       }
 
-    }
+    }*/
     
  
   }
@@ -163,11 +311,12 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(){
+    this.myContainer = document.getElementById("canvas");
     this.jsPlumbInstance = jsPlumb.getInstance();
     this.conexBack.getArquetipoById(this.arquetipo_id).subscribe(arquetipo =>{
       this.nombre_arquetipo = arquetipo["nombre"]
-      this.dibujarArquetipoImportado(arquetipo),
-      this.conexionesDiagramaImportado(jsPlumb,this.jsPlumbInstance,arquetipo,this.contador_nodos)
+      this.dibujarArquetipoImportado(arquetipo)
+      //this.conexionesDiagramaImportado(jsPlumb,this.jsPlumbInstance,arquetipo,this.contador_nodos)
     })
 
   }

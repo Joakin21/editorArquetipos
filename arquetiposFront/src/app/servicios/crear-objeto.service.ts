@@ -27,14 +27,16 @@ export class CrearObjetoService {
       newItem.style.color = "white";
       newItem.style.paddingTop = "1.3em";
       newItem.style.paddingBottom = "1.3em";
-      newItem.style.width ="150px"
+      //newItem.style.width ="150px"
+      newItem.style.height = "3em"
     }
     //para terminales
     if(tipoFigura=="figura3"){
       newItem.style.backgroundColor="white";
       newItem.style.color = "black";
       newItem.style.padding = "0.5em";
-      newItem.style.width ="100px"
+      newItem.style.height = "3em"
+      //newItem.style.width ="100px"
     }
     //para estructurales
     if(tipoFigura=="figura2"){
@@ -42,6 +44,7 @@ export class CrearObjetoService {
       newItem.style.backgroundColor="#D8D8D8";
       newItem.style.color = "black";
       newItem.style.padding = "0.5em";
+      //newItem.style.height = "3em"
       newItem.style.width ="100px"
 
     }

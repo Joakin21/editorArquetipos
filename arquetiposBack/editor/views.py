@@ -19,8 +19,8 @@ def listaArquetipos():
     for arq in arq_collection.find():
         arq["_id"] = str(arq["_id"])
         arquetipo["id"] = arq["_id"]
-        arquetipo["nombre"] = arq["nombre"]
-        arquetipo["tipo"] = arq["tipo"]
+        arquetipo["nombre"] = arq["nombre_arquetipo"]
+        #arquetipo["tipo"] = arq["tipo"]
         aArquetipos.append(arquetipo)
         arquetipo = {}
     return aArquetipos

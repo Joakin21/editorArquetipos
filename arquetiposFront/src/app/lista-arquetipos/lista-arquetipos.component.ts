@@ -41,7 +41,7 @@ export class ListaArquetiposComponent implements OnInit {
   }
 
   agregarArquetipoDiv(arquetipo: any){
-    console.log(arquetipo)
+    //console.log(arquetipo)
     var titulo = arquetipo["nombre"]
     var newArquetipoDiv = this.crearObjeto.crearArquetipoDiv(titulo)
     var editorButton = this.crearObjeto.crearBotonArquetipoDiv()
