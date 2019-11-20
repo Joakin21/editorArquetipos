@@ -19,7 +19,7 @@ def listaArquetipos():
     for arq in arq_collection.find():
         arq["_id"] = str(arq["_id"])
         arquetipo["id"] = arq["_id"]
-        arquetipo["nombre"] = arq["nombre_arquetipo"]
+        arquetipo["nombre"] = arq["text"]
         #arquetipo["tipo"] = arq["tipo"]
         aArquetipos.append(arquetipo)
         arquetipo = {}
@@ -34,12 +34,35 @@ def paraListaArquetipos(request):
         #obtenerArquetipo()
         return Response(listaArquetipos())
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def paraEditorArquetipos(request, question_id):
     if request.method == 'GET':
 
-        arquetipoSolicitado = arq_collection.find_one({"_id": ObjectId(question_id)})
-        arquetipoSolicitado["_id"]= str(arquetipoSolicitado["_id"])
+
+        try:
+            arquetipoSolicitado = arq_collection.find_one({"_id": ObjectId(question_id)})
+            arquetipoSolicitado["_id"]= str(arquetipoSolicitado["_id"])
+        except:
+            arquetipoSolicitado = arq_collection.find_one({"_id": question_id})
+            arquetipoSolicitado["_id"]= str(arquetipoSolicitado["_id"])
 
         return Response(arquetipoSolicitado)
+
+    if request.method == 'PUT':
+        #print (request.data)
+        
+        #borro el arquetipo en la db
+        try:
+            arq_collection.remove({'_id':ObjectId(question_id)})
+            resultado = arq_collection.insert_one(request.data)
+        except:
+            arq_collection.remove({'_id':question_id})
+            resultado = arq_collection.insert_one(request.data)
+
+        #inserto el nuevo arquetipo
+        
+
+        #print("id con el que viene: ",question_id)
+        
+        return Response({"respuestra":True})
 

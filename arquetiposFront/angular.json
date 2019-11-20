@@ -21,15 +21,18 @@
             "aot": false,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets" 
             ],
             "styles": [
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/jsplumb/css/jsplumbtoolkit-defaults.css"
+              "node_modules/jsplumb/css/jsplumbtoolkit-defaults.css",
+              "node_modules/jsmind/style/jsmind.css"
             ],
             "scripts": [
-              "node_modules/jsplumb/dist/js/jsplumb.js"
+              "node_modules/jsplumb/dist/js/jsplumb.js",
+              "node_modules/jsmind/js/jsmind.js",
+              "node_modules/jsmind/js/jsmind.draggable.js"
             ]
           },
           "configurations": {

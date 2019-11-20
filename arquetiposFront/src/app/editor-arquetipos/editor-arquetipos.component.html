@@ -14,34 +14,123 @@
     <div class="row">
       <div class="col-md-12 col-lg-2">
         <div id="panelFiguras">
-          <h4>Figuras</h4>
-          <!--IMAGEN-->
-          <img id="figura1" draggable="true" (dragstart)="drag($event)" src="assets/base.png">
-          <img id="figura2" draggable="true" (dragstart)="drag($event)" src="assets/estructural.png">
-          <img id="figura3" draggable="true" (dragstart)="drag($event)" src="assets/terminal.png">
+          <h4>opciones</h4>
+          <button (click)="mostrarNodo()">Editar nodo</button>
+          <button (click)="guardarArquetipo()">Guardar Cambios</button>
+
         </div>
       </div>
       <div class="col-md-12 col-lg-10">
-        <div (drop)="drop($event)" (dragover)="allowDrop($event)"class="jtk-demo-canvas canvas-wide chart-demo jtk-surface jtk-surface-nopan" id="canvas"></div>
+        <div id="jsmind_container"></div>
+        
       </div>
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalItems" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal arquetipos tipo 1 (sin nodos dentro)-->
+<div class="modal fade" id="modalTipoUno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{nodo_seleccionado_titulo}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel"> Edit {{text}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        {{nodo_seleccionado_detalles}}
+        
+        <form #datos_modal_1="ngForm" (ngSubmit)="editarNodoTipo1(datos_modal_1)" novalidate>
+
+           <div class="form-group">
+            <label for="tipo_nodo">Type</label>
+            <input type="text" class="form-control" id="tipo_nodo" name="tipo_nodo" ngModel #tipo_nodo="ngModel" value="{{tipo}}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="nombre">Name</label>
+            <input type="text" class="form-control" id="nombre" value="{{text}}" name="nombre" ngModel #nombre="ngModel"> <!--value="{{text}}"-->
+          </div>
+          <div class="form-group">
+            <label for="description_nodo">Description</label>
+            <textarea class="form-control" rows="5" id="description_nodo" name="description_nodo" ngModel #description_nodo="ngModel" value="{{description}}"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="comment_nodo">Comment</label>
+            <textarea class="form-control" rows="5" id="comment_nodo" name="comment_nodo" ngModel #comment_nodo="ngModel" value="{{comment}}"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="source_nodo">Source</label>
+            <input type="text" class="form-control" id="source_nodo" name="source_nodo" ngModel #source_nodo="ngModel" value="{{source}}">
+          </div>
+          <button type="submit" class="btn btn-primary">Edit</button>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel and close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal arquetipos tipo 2: coded text)-->
+<div class="modal fade" id="modalTipoDos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Edit {{text}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <form #datos_modal_2="ngForm" (ngSubmit)="editarNodoTipo2(datos_modal_2)" novalidate>
+
+           <div class="form-group">
+            <label for="tipo_nodo">Type</label>
+            <input type="text" class="form-control" id="tipo_nodo" name="tipo_nodo" ngModel #tipo_nodo="ngModel" value="{{tipo}}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="nombre">Name</label>
+            <input type="text" class="form-control" id="nombre" value="{{text}}" name="nombre" ngModel #nombre="ngModel"> <!--value="{{text}}"-->
+          </div>
+          <div class="form-group">
+            <label for="description_nodo">Description</label>
+            <textarea class="form-control" rows="5" id="description_nodo" name="description_nodo" ngModel #description_nodo="ngModel" value="{{description}}"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="comment_nodo">Comment</label>
+            <textarea class="form-control" rows="5" id="comment_nodo" name="comment_nodo" ngModel #comment_nodo="ngModel" value="{{comment}}"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="source_nodo">Source</label>
+            <input type="text" class="form-control" id="source_nodo" name="source_nodo" ngModel #source_nodo="ngModel" value="{{source}}">
+          </div>
+          <!--Contenido del nodo-->
+          <label>{{mensajeContenido}}</label>
+          <ul>
+              <!--<input id="enum_answer_{{enum.name}}" [value]='enum.name' type="radio" name="enums" [(ngModel)]="radioSelected">-->
+            <li *ngFor="let nodo of contenido"><label><input type="radio" id="answer_{{nodo['text']}}" [value]="nodo['text']" name="optradio" [(ngModel)]="radioSelected"> <b>{{nodo["text"]}}</b>{{" ["+nodo["description"]+"]"}}</label> </li>
+            <li><label><input type="radio" id="answe_nuevo" [value]="'nuevo'" name="optradio" [(ngModel)]="radioSelected">Crear Nuevo</label></li>
+            <li><label><input type="radio" id="answe_noCambiar" [value]="'noCambiar'" name="optradio" [(ngModel)]="radioSelected">No cambiar</label></li>
+
+          </ul>
+          <label>{{mensajeEdicion}}</label>
+          <div class="form-group">
+            <label for="nombre_nodo_contenido">Name</label>
+            <input type="text" class="form-control" id="nombre_nodo_contenido" placeholder="ingresar nombre del nodo" name="nombre_nodo_contenido" ngModel #nombre_nodo_contenido="ngModel"> <!--value="{{text}}"-->
+          </div>
+          <div class="form-group">
+            <label for="description_nodo_contenido">Description</label>
+            <textarea class="form-control" rows="5" id="description_nodo_contenido" placeholder="ingresar descripcion del nodo" name="description_nodo_contenido" ngModel #description_nodo_contenido="ngModel"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save change and close</button>
+        </form>
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel and close</button>
       </div>
     </div>
   </div>
