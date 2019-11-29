@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 import {SeleccionArquetipoService} from '../servicios/seleccion-arquetipo.service'
 import { CrearObjetoService } from '../servicios/crear-objeto.service'
 
-var routerLink
 @Component({
   selector: 'app-lista-arquetipos',
   templateUrl: './lista-arquetipos.component.html',
@@ -52,6 +51,10 @@ export class ListaArquetiposComponent implements OnInit {
     var padreDiv = document.getElementById("listaArqueripos"); 
     newArquetipoDiv.appendChild(editorButton);
     padreDiv.appendChild(newArquetipoDiv);
+  }
+  crearNuevoArquetipo(){
+    this.seleccionarArquetipo("nuevo arquetipo")
+    this.router.navigateByUrl('/editor')
   }
 
 }

@@ -68,6 +68,57 @@ def recolectarHijosForma2(nodo1,nodos_term_definitions, lista_hijos,tipo = 1):
                 hijos_tipo_2 = {}
     return contenido
 
+def obtenerTipoAndContenidoNodo(nodox, tipo_arquetipo, nodos_term_definitions):
+    contenido = []
+    tipo_nodo = ""
+
+    primer_tipo_nodo = nodox.find(RM_TYPE_NAME).text
+        
+    if primer_tipo_nodo == "CLUSTER" or tipo_arquetipo =="SECTION":
+        tipo_nodo = primer_tipo_nodo
+            
+    else:
+        cantidad_hijos = len(nodox.find(ATTRIBUTES).findall(CHILDREN))
+        if cantidad_hijos > 1:
+            tipo_nodo = "CHOICE"
+            #extraer hijos tipo 1
+            #lista_hijos = nodo1.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST) 
+            for children in nodox.find(ATTRIBUTES).findall(CHILDREN):
+                if children.find(ATTRIBUTES):
+                    lista_hijos = children.find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST)
+                    #if(nodo1.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES))
+                            
+                    #extrae hijos tipo 2 (nodos)
+                    contenido = recolectarHijosForma2(nodox,nodos_term_definitions,lista_hijos)
+
+            direccion_hijos_tipo_1 = nodox.find(ATTRIBUTES).findall(CHILDREN)
+            hijos_tipo_1 = {}
+            for hijos in direccion_hijos_tipo_1:
+                hijos_tipo_1["text"] = hijos.find(RM_TYPE_NAME).text
+                hijos_tipo_1["description"] = ""
+                contenido.append(hijos_tipo_1)
+                hijos_tipo_1 = {}
+
+        else:
+            tipo_nodo = nodox.find(ATTRIBUTES).find(CHILDREN).find(RM_TYPE_NAME).text
+            if tipo_nodo == "DV_CODED_TEXT":
+                lista_hijos = nodox.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST)
+                contenido = recolectarHijosForma2(nodox,nodos_term_definitions,lista_hijos)
+                    
+            if tipo_nodo == "DV_ORDINAL":
+                hijos_tipo_ordinal = {}
+                lista_hijos_tipo_ordinal = nodox.find(ATTRIBUTES).find(CHILDREN).findall(LIST)
+                #extrae hijos tipo 2 (nodos)
+                contenido = recolectarHijosForma2(nodox,nodos_term_definitions,lista_hijos_tipo_ordinal,2)
+                #numeros_dv_ordinal  = []
+                indice_contenido = 0
+                for hijo in lista_hijos_tipo_ordinal:
+                    #numeros_dv_ordinal.append(hijo.find(VALUE).text)
+                    contenido[indice_contenido]["numero"] = hijo.find(VALUE).text
+                    indice_contenido += 1
+        
+    return contenido, tipo_nodo
+
 #mientras (atributos_nodo_hijo.attrib[XSI_TYPE] == "C_MULTIPLE_ATTRIBUTE") then
 def solucion(nodos_en_la_estructura, actual_dic, nodos_term_definitions,tipo_arquetipo):
     cont = 1
@@ -99,54 +150,7 @@ def solucion(nodos_en_la_estructura, actual_dic, nodos_term_definitions,tipo_arq
                     if item.attrib["id"] == "source":
                         actual_dic["nodo"+str(cont)]["source"] = item.text
 
-                contenido = []
-
-                primer_tipo_nodo = nodox.find(RM_TYPE_NAME).text
-                    
-                if primer_tipo_nodo == "CLUSTER" or tipo_arquetipo =="SECTION":
-                    tipo_nodo = primer_tipo_nodo
-                        
-                else:
-                    cantidad_hijos = len(nodox.find(ATTRIBUTES).findall(CHILDREN))
-                    if cantidad_hijos > 1:
-                        tipo_nodo = "CHOICE"
-                        #extraer hijos tipo 1
-                        #lista_hijos = nodo1.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST) 
-                        for children in nodox.find(ATTRIBUTES).findall(CHILDREN):
-                            if children.find(ATTRIBUTES):
-                                lista_hijos = children.find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST)
-                                #if(nodo1.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES))
-                                        
-                                #extrae hijos tipo 2 (nodos)
-                                contenido = recolectarHijosForma2(nodox,nodos_term_definitions,lista_hijos)
-
-                        direccion_hijos_tipo_1 = nodox.find(ATTRIBUTES).findall(CHILDREN)
-                        hijos_tipo_1 = {}
-                        for hijos in direccion_hijos_tipo_1:
-                            hijos_tipo_1["text"] = hijos.find(RM_TYPE_NAME).text
-                            hijos_tipo_1["description"] = ""
-                            contenido.append(hijos_tipo_1)
-                            hijos_tipo_1 = {}
-
-                    else:
-                        tipo_nodo = nodox.find(ATTRIBUTES).find(CHILDREN).find(RM_TYPE_NAME).text
-                        if tipo_nodo == "DV_CODED_TEXT":
-                            lista_hijos = nodox.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST)
-                            contenido = recolectarHijosForma2(nodox,nodos_term_definitions,lista_hijos)
-                                
-                        if tipo_nodo == "DV_ORDINAL":
-                            hijos_tipo_ordinal = {}
-                            lista_hijos_tipo_ordinal = nodox.find(ATTRIBUTES).find(CHILDREN).findall(LIST)
-                            #extrae hijos tipo 2 (nodos)
-                            contenido = recolectarHijosForma2(nodox,nodos_term_definitions,lista_hijos_tipo_ordinal,2)
-                            numeros_dv_ordinal  = []
-                            for hijo in lista_hijos_tipo_ordinal:
-                                numeros_dv_ordinal.append(hijo.find(VALUE).text)
-
-                            contenido.append({"numeros":numeros_dv_ordinal})
-                                  
-                #arquetipo["estructura"+str(i+1)]["nodo"+str(cont)]["tipo"] = tipo_nodo
-                #arquetipo["estructura"+str(i+1)]["nodo"+str(cont)]["contenido"] = contenido
+                contenido, tipo_nodo = obtenerTipoAndContenidoNodo(nodox, tipo_arquetipo, nodos_term_definitions)
 
                 actual_dic["nodo"+str(cont)]["tipo"] = tipo_nodo
                 actual_dic["nodo"+str(cont)]["contenido"] = contenido
@@ -167,6 +171,7 @@ def construirArquetipo(root):
 
     arquetipo = {}
     arquetipo["text"] = obtenerNombreArquetipo(root)
+    arquetipo["tipo"] = "base"
 
     definition = root.find(DEFINITION)
     estructurasPrincipales = definition.findall(ATTRIBUTES)#2 estructuras
@@ -186,6 +191,7 @@ def construirArquetipo(root):
     for i in range(len(estructurasPrincipales)):
         arquetipo["estructura"+str(i+1)] = {}
         arquetipo["estructura"+str(i+1)]["text"] = nombre_estructuras[i]
+        arquetipo["estructura"+str(i+1)]["tipo"] = "estructural"
         #arquetipo["estructura"+str(i+1)]["X"] = i
 
         if(tipo_arquetipo=="ACTION"):
@@ -225,53 +231,7 @@ def construirArquetipo(root):
                             arquetipo["estructura"+str(i+1)]["nodo"+str(cont)]["source"] = item.text
 
                     #extrae contenido que tienen algunos nodos
-                    contenido = []
-                    if arquetipo["estructura"+str(i+1)]["text"] == "ism_transition":
-                        tipo_nodo = "careflow_step"
-                    else:
-                        primer_tipo_nodo = nodo1.find(RM_TYPE_NAME).text
-                        if primer_tipo_nodo == "CLUSTER" or tipo_arquetipo =="SECTION":
-                            tipo_nodo = primer_tipo_nodo
-                        
-                        else:
-                            cantidad_hijos = len(nodo1.find(ATTRIBUTES).findall(CHILDREN))
-                            if cantidad_hijos > 1:
-                                tipo_nodo = "CHOICE"
-                                #extraer hijos tipo 1
-                                #lista_hijos = nodo1.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST) 
-                                for children in nodo1.find(ATTRIBUTES).findall(CHILDREN):
-                                    if children.find(ATTRIBUTES):
-                                        lista_hijos = children.find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST)
-                                        #if(nodo1.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES))
-                                        
-                                        #extrae hijos tipo 2 (nodos)
-                                        contenido = recolectarHijosForma2(nodo1,nodos_term_definitions,lista_hijos)
-
-                                direccion_hijos_tipo_1 = nodo1.find(ATTRIBUTES).findall(CHILDREN)
-                                hijos_tipo_1 = {}
-                                for hijos in direccion_hijos_tipo_1:
-                                    hijos_tipo_1["text"] = hijos.find(RM_TYPE_NAME).text
-                                    hijos_tipo_1["description"] = ""
-                                    
-                                    contenido.append(hijos_tipo_1)
-                                    hijos_tipo_1 = {}
-
-                            else:
-                                tipo_nodo = nodo1.find(ATTRIBUTES).find(CHILDREN).find(RM_TYPE_NAME).text
-                                if tipo_nodo == "DV_CODED_TEXT":
-                                    lista_hijos = nodo1.find(ATTRIBUTES).find(CHILDREN).find(ATTRIBUTES).find(CHILDREN).findall(CODE_LIST)
-                                    contenido = recolectarHijosForma2(nodo1,nodos_term_definitions,lista_hijos)
-                                
-                                if tipo_nodo == "DV_ORDINAL":
-                                    hijos_tipo_ordinal = {}
-                                    lista_hijos_tipo_ordinal = nodo1.find(ATTRIBUTES).find(CHILDREN).findall(LIST)
-                                    #extrae hijos tipo 2 (nodos)
-                                    contenido = recolectarHijosForma2(nodo1,nodos_term_definitions,lista_hijos_tipo_ordinal,2)
-                                    numeros_dv_ordinal  = []
-                                    for hijo in lista_hijos_tipo_ordinal:
-                                        numeros_dv_ordinal.append(hijo.find(VALUE).text)
-
-                                    contenido.append({"numeros":numeros_dv_ordinal})
+                    contenido, tipo_nodo = obtenerTipoAndContenidoNodo(nodo1, tipo_arquetipo, nodos_term_definitions)
                                   
                     arquetipo["estructura"+str(i+1)]["nodo"+str(cont)]["tipo"] = tipo_nodo
                     arquetipo["estructura"+str(i+1)]["nodo"+str(cont)]["contenido"] = contenido
@@ -307,24 +267,31 @@ def construirArquetipo(root):
     #arma la estructura json
     arquetipo["estructura"+str(numero_de_estructuras+1)] = {}
     arquetipo["estructura"+str(numero_de_estructuras+1)]["text"]="description"
+    arquetipo["estructura"+str(numero_de_estructuras+1)]["tipo"] = "estructural"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo1"]={}
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo1"]["text"] = "concept description"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo1"]["value"] = concept_description
+    arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo1"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo2"]={}
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo2"]["text"] = "purpose"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo2"]["value"] = proposito
+    arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo2"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo3"]={}
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo3"]["text"] = "use"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo3"]["value"] = uso
+    arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo3"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo4"]={}
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo4"]["text"] = "misuse"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo4"]["value"] = misuse
+    arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo4"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo5"]={}
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo5"]["text"] = "keywords"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo5"]["value"] = atributos_palabras_clave
+    arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo5"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo6"]={}
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo6"]["text"] = "references"
     arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo6"]["value"] = references
+    arquetipo["estructura"+str(numero_de_estructuras+1)]["nodo6"]["tipo"] = "info"
 
     #ATTRIBUTION
     id_arquetipo = root.findall(ARCHETYPE_ID)[0].find(VALUE).text
@@ -372,38 +339,44 @@ def construirArquetipo(root):
     
     arquetipo["estructura"+str(numero_de_estructuras+2)] = {}
     arquetipo["estructura"+str(numero_de_estructuras+2)]["text"]="attribution"
+    arquetipo["estructura"+str(numero_de_estructuras+2)]["tipo"] = "estructural"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo1"]={}
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo1"]["text"] = "archetype ID"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo1"]["value"] = id_arquetipo
+    arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo1"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo2"]={}
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo2"]["text"] = "other identefication"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo2"]["value"] = atributos_other_identefication
+    arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo2"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo3"]={}
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo3"]["text"] = "original author"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo3"]["value"] = atributos_originalAuthor
+    arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo3"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo4"]={}
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo4"]["text"] = "current custodian"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo4"]["value"] = atributos_current_custodian
+    arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo4"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo5"]={}
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo5"]["text"] = "other contributors"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo5"]["value"] = atributos_contribuidores
+    arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo5"]["tipo"] = "info"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo6"]={}
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo6"]["text"] = "licencing"
     arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo6"]["value"] = atributos_licencing
+    arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo6"]["tipo"] = "info"
     if (root.find(TRANSLATIONS)):
         traductor = root.find(TRANSLATIONS).find(AUTHOR).text
         arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo7"]={}
         arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo7"]["text"] = "translators"
-        arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo7"]["text"] = traductor
+        arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo7"]["value"] = traductor
+        arquetipo["estructura"+str(numero_de_estructuras+2)]["nodo7"]["tipo"] = "info"
 
 
     return arquetipo
 
 def procesarXML(arq_collection,file):#Procesa el archivo xml importado
     tree = ET.parse(file)
-    root = tree.getroot()
- 
-    
+    root = tree.getroot() 
 
     estructuraProcesada = construirArquetipo(root)
 

@@ -1,7 +1,8 @@
 <div class="p-2" id="listaArqueripos">
     <h2 class="text-center">Mis Arquetipos</h2>
 
-    <button routerLink="/creador">Crear Arquetipo</button><br><br>
+    <!--<button routerLink="/creador">Crear Arquetipo</button><br><br>-->
+    <button (click)="crearNuevoArquetipo()" class="mb-2">Crear Arquetipo</button>
     <div class="form-group">
         <input type="file" id="file" name="fileupload" value="fileupload" (change)="importarArchivo($event.target.files)">
     </div>

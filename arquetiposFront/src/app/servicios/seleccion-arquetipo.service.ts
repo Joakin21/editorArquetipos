@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SeleccionArquetipoService {
 
-  private messageSource = new BehaviorSubject('default message');
+  private messageSource = new BehaviorSubject(null);
   currentArquetipo = this.messageSource.asObservable();
 
   constructor() { }
