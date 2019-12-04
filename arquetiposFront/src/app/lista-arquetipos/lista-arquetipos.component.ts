@@ -3,7 +3,7 @@ import {ConexionBackendService} from '../servicios/conexion-backend.service'
 import {Router} from '@angular/router';
 import {SeleccionArquetipoService} from '../servicios/seleccion-arquetipo.service'
 import { CrearObjetoService } from '../servicios/crear-objeto.service'
-
+declare var $:any;
 @Component({
   selector: 'app-lista-arquetipos',
   templateUrl: './lista-arquetipos.component.html',
@@ -18,6 +18,7 @@ export class ListaArquetiposComponent implements OnInit {
   ngOnInit() {
     
     this.conexBack.getArquetipos().subscribe(resp => this.arquetiposFromDB(resp));
+
     
   }
   arquetiposFromDB(arquetipos:any[]){
@@ -31,25 +32,71 @@ export class ListaArquetiposComponent implements OnInit {
 
   importarArchivo(files: FileList) {
     this.fileToUpload = files.item(0);
-    if(this.fileToUpload)
-      this.conexBack.enviarArchivo(this.fileToUpload).subscribe(data => this.agregarArquetipoDiv(data));
+    var tipo_archivo = this.fileToUpload["name"].slice(this.fileToUpload["name"].length - 3)
+    if(tipo_archivo=="xml" || tipo_archivo=="adl"){
+      if(this.fileToUpload)
+        this.conexBack.enviarArchivo(this.fileToUpload,tipo_archivo).subscribe(data => this.agregarArquetipoDiv(data));
+      
+    }
+    else
+      alert("Solamente los formatos xml, adl y json son soportados")
+    
 
   }
+
   seleccionarArquetipo(arquetipo:any){
     this.elegirArquetipo.asignar(arquetipo)
   }
 
-  agregarArquetipoDiv(arquetipo: any){
-    //console.log(arquetipo)
-    var titulo = arquetipo["nombre"]
-    var newArquetipoDiv = this.crearObjeto.crearArquetipoDiv(titulo)
-    var editorButton = this.crearObjeto.crearBotonArquetipoDiv()
-
-    editorButton.addEventListener ("click", (evt) => this.seleccionarArquetipo(arquetipo["id"]));
-    editorButton.addEventListener ("click", (evt) => this.router.navigateByUrl('/editor'));
+  arquetipo_a_eliminar:any 
+  div_a_eliminar:string
+  alertaEliminarArquetipo(arquetipo:any, id_div){
+    $('#modalEliminarArquetipo').modal('show');
     
+    this.arquetipo_a_eliminar =arquetipo
+    this.div_a_eliminar = id_div
+
+  }
+  eliminarArquetipo(){
+    //console.log("voy a eliminar: "+this.arquetipo_a_eliminar["id"])
+    this.conexBack.deleteArquetipo(this.arquetipo_a_eliminar["id"]).subscribe();
+    console.log("voy a eliminar "+this.div_a_eliminar)
+    $("#"+this.div_a_eliminar).remove();
+  }
+  exportarArquetipo(id_arquetipo:string){
+    alert("exprtare: "+id_arquetipo)
+  }
+  id_div:string
+  n_id_div:number = 1
+  agregarArquetipoDiv(arquetipo: any){
+    
+    var titulo = arquetipo["nombre"]
+    
+    //corregir detallito; cambia el texto del label upload
+    document.getElementById('label1').innerHTML = titulo; 
+
+    //crear objetos div y botones
+    this.id_div = "div"+this.n_id_div
+    var newArquetipoDiv = this.crearObjeto.crearArquetipoDiv(titulo,this.id_div)
+    this.n_id_div = this.n_id_div + 1
+    let id_div = this.id_div 
+    var contenedorBotones = this.crearObjeto.crearDivContenedorBotones()
+    var editar_btn = this.crearObjeto.crearBotonArquetipoDiv(1)
+    var eliminar_btn = this.crearObjeto.crearBotonArquetipoDiv(2)
+    //var exportar_btn = this.crearObjeto.crearBotonArquetipoDiv(2)
+    //agrega eventos a los botones
+    editar_btn.addEventListener ("click", (evt) => this.seleccionarArquetipo(arquetipo["id"]))
+    editar_btn.addEventListener ("click", (evt) => this.router.navigateByUrl('/editor'))
+    eliminar_btn.addEventListener ("click", (evt) => this.alertaEliminarArquetipo(arquetipo, id_div))
+    //exportar_btn.addEventListener ("click", (evt) => this.exportarArquetipo(arquetipo["id"]))
+
+    //se arma el div del arquetipo
+    contenedorBotones.appendChild(editar_btn);
+    contenedorBotones.appendChild(eliminar_btn);
+    //contenedorBotones.appendChild(exportar_btn);
+    newArquetipoDiv.appendChild(contenedorBotones);
+    //se agrega el div al area
     var padreDiv = document.getElementById("listaArqueripos"); 
-    newArquetipoDiv.appendChild(editorButton);
     padreDiv.appendChild(newArquetipoDiv);
   }
   crearNuevoArquetipo(){

@@ -57,9 +57,13 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
               }else{
                 direction = "left"
               }
-
+              var color 
+              if(obj[k]["tipo"] == "estructural")
+                color = "#A4A4A4"//gis normal
+              else
+                color = "#D8D8D8"//gis claro
               obj[k]["id_nodo"] = "nodo"+this.id_nodo
-              this.myData.push({"id":obj[k]["id_nodo"], "parentid":obj["id_nodo"],"direction":direction, "topic":obj[k]["text"]})
+              this.myData.push({"id":obj[k]["id_nodo"], "parentid":obj["id_nodo"],"direction":direction, "topic":obj[k]["text"], "background-color":color, "foreground-color":"black"})
               this.id_nodo = this.id_nodo + 1
             this.crearData(obj[k]);
         }
@@ -332,12 +336,11 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     arquetipo["id_nodo"] ="nodo1"
     this.myData.push({"id":arquetipo["id_nodo"], "isroot":true, "topic":arquetipo["text"]})
     this.crearData(arquetipo)
-    //console.log(arquetipo)
+    console.log(arquetipo)
     this.arquetipo = arquetipo
 
     //prueba jsmind
     this.configurarJsMind()
-
     
   }
 
@@ -434,7 +437,9 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
           //para el diagrama jsmind
           console.log(this._jm.get_selected_node())
           //var selected_node = this._jm.get_selected_node();
-          var node = this._jm.add_node(this.selected_node, id_nuevo_nodo, nuevo_data_nodo["nombre"]);
+          var color = "#D8D8D8"
+          //this.myData.push({"id":obj[k]["id_nodo"], "parentid":obj["id_nodo"],"direction":direction, "topic":obj[k]["text"], "background-color":color, "foreground-color":"black"})
+          var node = this._jm.add_node(this.selected_node, id_nuevo_nodo, nuevo_data_nodo["nombre"], {"background-color":color, "foreground-color":"black"});
 
         }
         this.buscarCrearNodo(arquetipo[k],nuevo_data_nodo);
@@ -460,7 +465,8 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
       var id_nuevo_nodo = "nodo"+(this.num_nuevo_nodo)
       this.arquetipo[clave_nuevo_nodo]["id_nodo"] = id_nuevo_nodo
       //para el diagrama jsmind
-      var node = this._jm.add_node(this.selected_node, id_nuevo_nodo, datos_conf_nuevo_nodo.value["nombre"]);
+      var color = "#A4A4A4"
+      var node = this._jm.add_node(this.selected_node, id_nuevo_nodo, datos_conf_nuevo_nodo.value["nombre"],{"background-color":color, "foreground-color":"black"});
 
 
     }else{
@@ -485,6 +491,13 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     this.myData.push({"id":this.arquetipo["id_nodo"], "isroot":true, "topic":this.arquetipo["text"]})
     this.configurarJsMind()
     
+  }
+
+  crearArchivoJson(){
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.arquetipo));
+    var dlAnchorElem = document.getElementById('downloadAnchorElem');
+    dlAnchorElem.setAttribute("href",     dataStr     );
+    dlAnchorElem.setAttribute("download", this.nombre_arquetipo+".json");
   }
   
   ngOnInit() {

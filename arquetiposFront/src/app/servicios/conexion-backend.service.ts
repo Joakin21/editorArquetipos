@@ -12,12 +12,13 @@ export class ConexionBackendService {
 
   constructor(private httpClient:HttpClient) { }
 
-  enviarArchivo(fileToUpload: File){
+  enviarArchivo(fileToUpload: File, tipo_archivo){
 
     const formData: FormData = new FormData();
-    formData.append('xml', fileToUpload, fileToUpload.name);
-    
+    formData.append(tipo_archivo, fileToUpload, fileToUpload.name);
+      
     return this.httpClient.post<any>(this.url_import, formData);
+
   }
 
   getArquetipos() : Observable<any[]>{
@@ -32,4 +33,7 @@ export class ConexionBackendService {
     return this.httpClient.put<any>(this.url_import+arquetipo["_id"]+"/", arquetipo);
   }
 
+  deleteArquetipo(id_arq:string): Observable<any>{
+    return this.httpClient.delete(this.url_import+id_arq+"/");
+  }
 }

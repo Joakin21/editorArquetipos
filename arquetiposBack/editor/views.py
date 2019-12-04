@@ -28,13 +28,19 @@ def listaArquetipos():
 @api_view(['GET', 'POST'])
 def paraListaArquetipos(request):
     if request.method == 'POST':
-        archivoProcesado = procesarXML(arq_collection,request.FILES["xml"])
-        return Response(archivoProcesado)
+        tipo_archivo = list(request.FILES.keys())[0]
+        if tipo_archivo == "xml":
+            #intente procesar un xml
+            archivoProcesado = procesarXML(arq_collection,request.FILES["xml"])
+            return Response(archivoProcesado)
+        else: #si o si es un adl"""
+            return Response({"respuestra":True})
+
     if request.method == 'GET':
         #obtenerArquetipo()
         return Response(listaArquetipos())
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def paraEditorArquetipos(request, question_id):
     if request.method == 'GET':
 
@@ -65,4 +71,12 @@ def paraEditorArquetipos(request, question_id):
         #print("id con el que viene: ",question_id)
         
         return Response({"respuestra":True})
+    
+    if request.method == 'DELETE':
+        print("quieren eliminar algo prro :v",question_id)
+        try:
+            arq_collection.remove({'_id':ObjectId(question_id)})
+        except:
+            arq_collection.remove({'_id':question_id})
+        return Response({"eliminar":True})
 

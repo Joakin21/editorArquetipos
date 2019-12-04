@@ -10,10 +10,11 @@
           <h4>opciones</h4>
           <!--mostrar si ya esta creado el arquetipo-->
           <div *ngIf="arquetipo">
-            <button (click)="mostrarNodo()" class="m-2">Editar Nodo</button>
-            <button (click)="nuevoNodo()" class="m-2">Agregar Nodo</button>
-            <button (click)="eliminarNodo()" class="m-2">Eliminar Nodo</button>
-            <button (click)="guardarArquetipo()" class="m-2">Guardar Cambios</button>
+            <button (click)="mostrarNodo()" class="btn btn-secondary m-2">Editar Nodo</button>
+            <button (click)="nuevoNodo()" class="btn btn-secondary m-2">Agregar Nodo</button>
+            <button (click)="eliminarNodo()" class="btn btn-secondary m-2">Eliminar Nodo</button>
+            <button (click)="guardarArquetipo()" class="btn btn-primary m-2">Guardar Cambios</button>
+            <a class="btn btn-primary m-2" role="button" id="downloadAnchorElem" (click)="crearArchivoJson()" href="" download="">Download</a>
           </div>
 
         </div>

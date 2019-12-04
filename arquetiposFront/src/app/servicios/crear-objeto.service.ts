@@ -7,90 +7,69 @@ export class CrearObjetoService {
 
   constructor() { }
 
+  ancho:string = "160px"
 
-
-  crearNodo(id_item, x:number, y:number,tipoFigura:string):any{//PARA LOS TERMINALES (CAMBIAR NOBRE DE LA FUNCION)
-    var left = x.toString()
-    var top = y.toString()
-    var newItem = document.createElement("div"); 
-    newItem.style.border="1px solid #346789";
-    newItem.style.textAlign="center";
-    newItem.style.zIndex = "24";
-    newItem.style.cursor = "pointer";
-    newItem.style.boxShadow = "2px 2px 19px #aaa";
-    newItem.style.position = "absolute";
-    newItem.style.borderRadius = "0.5em";
-
-    //para base
-    if(tipoFigura=="figura1"){
-      newItem.style.backgroundColor="#0174DF";
-      newItem.style.color = "white";
-      newItem.style.paddingTop = "1.3em";
-      newItem.style.paddingBottom = "1.3em";
-      //newItem.style.width ="150px"
-      newItem.style.height = "3em"
-    }
-    //para terminales
-    if(tipoFigura=="figura3"){
-      newItem.style.backgroundColor="white";
-      newItem.style.color = "black";
-      newItem.style.padding = "0.5em";
-      newItem.style.height = "3em"
-      //newItem.style.width ="100px"
-    }
-    //para estructurales
-    if(tipoFigura=="figura2"){
-      console.log(tipoFigura)
-      newItem.style.backgroundColor="#D8D8D8";
-      newItem.style.color = "black";
-      newItem.style.padding = "0.5em";
-      //newItem.style.height = "3em"
-      newItem.style.width ="100px"
-
-    }
-   
-    newItem.style.display = "flex";
-    newItem.style.alignItems = "center";
-    newItem.style.justifyContent = "center";
-    newItem.style.webkitTransition = "-webkit-box-shadow 0.15s ease-in";
-    newItem.style.transition = "box-shadow 0.15s ease-in";
-    newItem.style.left = left+"em";
-    newItem.style.top = top+"em";
-    newItem.setAttribute("id",id_item)
-    newItem.setAttribute("class","window")
-    return newItem
-  }
-
-  crearArquetipoDiv(titulo:string):any{
+  crearArquetipoDiv(titulo:string,id_div:string):any{
 
     //Creacion del div arquetipo
     var newArquetipoDiv = document.createElement("div"); 
     newArquetipoDiv.style.backgroundColor="white";
-    
+    newArquetipoDiv.style.width=this.ancho
+    newArquetipoDiv.style.height = "150px"
     newArquetipoDiv.style.margin="1em";
-    newArquetipoDiv.style.padding="1em";
+    newArquetipoDiv.style.position = "relative"
     newArquetipoDiv.style.display="inline-block";
-    newArquetipoDiv.style.textAlign="center";
-    //Creacion del titulo del div arquetipo
-    newArquetipoDiv.innerHTML=titulo
+    newArquetipoDiv.setAttribute("id",id_div)
+    //crear div que contiene el titulo
+    var titulo_div = document.createElement("div"); 
+    titulo_div.innerHTML=titulo
+    //titulo_div.style.backgroundColor="gray"
+    titulo_div.style.textAlign="center"
+    titulo_div.style.overflow = "hidden"
+    titulo_div.style.whiteSpace = "nowrap"
+    titulo_div.style.width=this.ancho
+    titulo_div.style.height="30px"
+    titulo_div.style.paddingLeft = "5px"
+    titulo_div.style.paddingRight = "5px"
+    titulo_div.style.textOverflow="ellipsis"
 
-    /*var arqTitulo = document.createTextNode(titulo);
-    var myTitle = document.createElement("p");
-    myTitle.appendChild(arqTitulo);
-    //Creacion de espacio*/
-    var espacio = document.createElement("br");
-    //newArquetipoDiv.appendChild(myTitle); 
-    newArquetipoDiv.appendChild(espacio);
+    titulo_div.style.top = "50%"
+    titulo_div.style.position = "absolute"
+    titulo_div.style.transform = "translateY(-50%)"
+
+    newArquetipoDiv.appendChild(titulo_div);
 
     return newArquetipoDiv
   }
 
-  crearBotonArquetipoDiv():any{
+  crearBotonArquetipoDiv(tipo:number):any{//1:editar, 2:eliminar
     var editorButton = document.createElement("BUTTON");
-    editorButton.innerHTML = "Editar";
-    editorButton.style.width="10em";
-    editorButton.style.marginTop="2em";
+    if(tipo == 1){
+      editorButton.innerHTML = "edit";
+      editorButton.setAttribute("class","btn btn-secondary btn-sm")
+    }
+    /*if(tipo == 2){
+      editorButton.innerHTML = "export";
+      editorButton.setAttribute("class","btn btn-secondary btn-sm")
+    }*/
+    if(tipo == 2){
+      editorButton.innerHTML = "delete";
+      editorButton.setAttribute("class","btn btn-danger btn-sm")
+    }
+    
+    editorButton.style.position = "relative"
+    editorButton.style.display="inline-block";
     return editorButton
+  }
+  crearDivContenedorBotones(){
+    var contenedorBotones = document.createElement("div")
+    contenedorBotones.style.left = "50%"
+    contenedorBotones.style.position = "absolute"
+    contenedorBotones.style.transform = "translateX(-50%)"
+    contenedorBotones.style.top = "75%"
+    contenedorBotones.style.width=this.ancho
+    contenedorBotones.style.textAlign="center"
+    return contenedorBotones
   }
 
 }
