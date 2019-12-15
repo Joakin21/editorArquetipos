@@ -1,39 +1,74 @@
 <div class="p-2" id="listaArqueripos">
-    <h2 class="text-center">Mis Arquetipos</h2>
+    <h2 class="text-center">My Archetypes</h2>
 
     <!--<button routerLink="/creador">Crear Arquetipo</button><br><br>-->
-    <button (click)="crearNuevoArquetipo()" class="btn btn-secondary m-2">Crear Arquetipo</button>
+    <button (click)="crearNuevoArquetipo()" class="btn btn-secondary m-2">New Archetype</button>
 
     <div class="input-group m-2 w-50">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupFileAddon01">Cargar Arquetipo</span>
+          <span class="input-group-text" id="inputGroupFileAddon01">Load archetype</span>
         </div>
         <div class="custom-file">
           <input type="file" class="custom-file-input" id="inputGroupFile01"
             aria-describedby="inputGroupFileAddon01" (change)="importarArchivo($event.target.files)">
-          <label class="custom-file-label" id="label1" for="inputGroupFile01">Arrastrar archivo</label>
+          <label class="custom-file-label" id="label1" for="inputGroupFile01">Drag file</label>
         </div>
     </div>
+    <!--Boton opciones-->
+    <div class="dropdown">
+      <button class="btn btn-danger dropdown-toggle m-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Options
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" (click)="alertaEliminarTodos()" href="#">Delete all</a>
+
+      </div>
+    </div>
+
+
 </div>
 <!-- Modal alerta de eliminar-->
 <div class="modal fade" id="modalEliminarArquetipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Eliminar Arquetipo</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Delete archetype</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div *ngIf="arquetipo_a_eliminar">
-          <p>¿Estas seguro de elimar el arquetipo {{arquetipo_a_eliminar['nombre']}}?</p>
+          <p>Are you sure to eliminate the archetype {{arquetipo_a_eliminar['nombre']}}?</p>
         </div>
 
       </div>
       <div class="modal-footer">
-        <button type="button" (click)="eliminarArquetipo()"class="btn btn-danger" data-dismiss="modal">Eliminar</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" (click)="eliminarArquetipo()"class="btn btn-danger" data-dismiss="modal">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal alerta de eliminar todos los arquetipos-->
+<div class="modal fade" id="modalEliminarTodosArquetipos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete All Archetypes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <p>Are you sure to eliminate all archetypes?</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="eliminarTodos()"class="btn btn-danger" data-dismiss="modal">Delete all</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>

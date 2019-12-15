@@ -11,7 +11,7 @@ export class HeaderComponent implements OnInit {
   arquetipo:any;
 
   constructor() { }
-  titulo:string = "Editor de Arquetipos"
+  titulo:string = "Archetype Editor"
   ngOnInit() {
 
     

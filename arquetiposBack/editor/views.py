@@ -25,7 +25,7 @@ def listaArquetipos():
         arquetipo = {}
     return aArquetipos
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 def paraListaArquetipos(request):
     if request.method == 'POST':
         tipo_archivo = list(request.FILES.keys())[0]
@@ -39,6 +39,11 @@ def paraListaArquetipos(request):
     if request.method == 'GET':
         #obtenerArquetipo()
         return Response(listaArquetipos())
+
+    if request.method == 'DELETE':
+        arq_collection.delete_many({})
+
+        return Response({"eliminar":True})
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def paraEditorArquetipos(request, question_id):
@@ -73,10 +78,12 @@ def paraEditorArquetipos(request, question_id):
         return Response({"respuestra":True})
     
     if request.method == 'DELETE':
-        print("quieren eliminar algo prro :v",question_id)
         try:
-            arq_collection.remove({'_id':ObjectId(question_id)})
+            eliminar_arquetipo = arq_collection.remove({'_id':ObjectId(question_id)})
         except:
+            eliminar_arquetipo = arq_collection.remove({'_id':question_id})
+        if eliminar_arquetipo['n'] == 0: #no lo pudo elinar
             arq_collection.remove({'_id':question_id})
+
         return Response({"eliminar":True})
 

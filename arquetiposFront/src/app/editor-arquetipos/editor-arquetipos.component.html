@@ -2,19 +2,19 @@
 <app-menu [arquetipoElegido]="nombre_arquetipo"></app-menu>
 
 <div id="editor">
-    <h4 class="text-center m-2">Diagrama</h4>
+    <h4 class="text-center m-2">Diagram</h4>
     <p class="text-center text-info">{{mensajeAlerta}}</p>
     <div class="row">
       <div class="col-md-12 col-lg-2">
         <div id="panelFiguras">
-          <h4>opciones</h4>
+          <h4>Options</h4>
           <!--mostrar si ya esta creado el arquetipo-->
           <div *ngIf="arquetipo">
-            <button (click)="mostrarNodo()" class="btn btn-secondary m-2">Editar Nodo</button>
-            <button (click)="nuevoNodo()" class="btn btn-secondary m-2">Agregar Nodo</button>
-            <button (click)="eliminarNodo()" class="btn btn-secondary m-2">Eliminar Nodo</button>
-            <button (click)="guardarArquetipo()" class="btn btn-primary m-2">Guardar Cambios</button>
-            <a class="btn btn-primary m-2" role="button" id="downloadAnchorElem" (click)="crearArchivoJson()" href="" download="">Download</a>
+            <button (click)="mostrarNodo()" class="btn btn-secondary m-2">Edit node</button>
+            <button (click)="nuevoNodo()" class="btn btn-secondary m-2">Add node</button>
+            <button (click)="eliminarNodo()" class="btn btn-secondary m-2">Delete node</button>
+            <button (click)="guardarArquetipo()" class="btn btn-primary m-2">Save changes</button>
+            <a class="btn btn-primary m-2" role="button" id="downloadAnchorElem" (click)="crearArchivoJson()" href="" download="">Download as json</a>
           </div>
 
         </div>
@@ -150,7 +150,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Configurar nuevo nodo</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Configure new node</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

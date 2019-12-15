@@ -480,7 +480,7 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     console.log(datos_nuevo_arquetipo.value)
     //crear estructutra base
     this.arquetipo = {}
-    this.arquetipo["_id"] = "77jajajojojeje99"
+    //this.arquetipo["_id"] = "77jajajojojeje99"//mongodb genera el id automaticamente
     this.arquetipo["text"] = datos_nuevo_arquetipo.value["nuevo_arquetipo"]
     this.arquetipo["tipo"] = "base"
     this.arquetipo["id_nodo"] = "nodo1"

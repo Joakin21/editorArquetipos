@@ -13,7 +13,8 @@ export class ListaArquetiposComponent implements OnInit {
 
   constructor(private router: Router,private conexBack: ConexionBackendService, private elegirArquetipo: SeleccionArquetipoService, private crearObjeto: CrearObjetoService) { }
 
-  arquetipos: any[]
+  //arquetipos: any[]
+  divs_arquetipos = []
 
   ngOnInit() {
     
@@ -63,9 +64,25 @@ export class ListaArquetiposComponent implements OnInit {
     console.log("voy a eliminar "+this.div_a_eliminar)
     $("#"+this.div_a_eliminar).remove();
   }
-  exportarArquetipo(id_arquetipo:string){
-    alert("exprtare: "+id_arquetipo)
+  alertaEliminarTodos(){
+
+    if(Array.isArray(this.divs_arquetipos) && this.divs_arquetipos.length )
+      $('#modalEliminarTodosArquetipos').modal('show');
+    else
+      alert("No hay arquetipos que borrar")
+
   }
+  eliminarTodos(){
+    //alert("delete all")
+    this.conexBack.deleteAllArquetipos().subscribe();
+    $("#contenedor_arquetipos").remove();
+    //recorre todos los div arquetipos y eliminalos
+    for (let div of this.divs_arquetipos) {
+      $("#"+div).remove();
+    }
+  }
+
+
   id_div:string
   n_id_div:number = 1
   agregarArquetipoDiv(arquetipo: any){
@@ -77,6 +94,7 @@ export class ListaArquetiposComponent implements OnInit {
 
     //crear objetos div y botones
     this.id_div = "div"+this.n_id_div
+    this.divs_arquetipos.push(this.id_div)
     var newArquetipoDiv = this.crearObjeto.crearArquetipoDiv(titulo,this.id_div)
     this.n_id_div = this.n_id_div + 1
     let id_div = this.id_div 

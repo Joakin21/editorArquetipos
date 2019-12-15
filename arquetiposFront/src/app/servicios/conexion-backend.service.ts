@@ -36,4 +36,9 @@ export class ConexionBackendService {
   deleteArquetipo(id_arq:string): Observable<any>{
     return this.httpClient.delete(this.url_import+id_arq+"/");
   }
+  
+  deleteAllArquetipos() : Observable<any>{
+    return this.httpClient.delete(this.url_import);
+  }
+  
 }
