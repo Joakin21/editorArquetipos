@@ -39,6 +39,34 @@
     </div>
 </div>
 
+<!--Modal para editar nodos estructurales y base-->
+<div class="modal fade" id="modalTipoEstructural" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Edit {{text}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #datos_modal_3="ngForm" (ngSubmit)="editarNodoEstructural(datos_modal_3)" novalidate>
+
+          <div class="form-group">
+            <label for="nombre">Name</label>
+            <input type="text" class="form-control" id="nombre"  name="nombre" [(ngModel)]="text"> <!--value="{{text}}"-->
+          </div>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal arquetipos tipo 1: Se intenta abarcar la mayoria de nodos posible-->
 <div class="modal fade" id="modalTipo1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -56,23 +84,23 @@
 
           <div class="form-group">
             <label for="tipo_nodo">Type</label>
-            <input type="text" class="form-control" id="tipo_nodo" name="tipo_nodo" ngModel #tipo_nodo="ngModel" value="{{tipo}}" readonly>
+            <input type="text" class="form-control" id="tipo_nodo" name="tipo_nodo"[(ngModel)]="tipo" readonly>
           </div>
           <div class="form-group">
             <label for="nombre">Name</label>
-            <input type="text" class="form-control" id="nombre" value="{{text}}" name="nombre" ngModel #nombre="ngModel"> <!--value="{{text}}"-->
+            <input type="text" class="form-control" id="nombre"  name="nombre" [(ngModel)]="text"> <!--value="{{text}}"-->
           </div>
           <div class="form-group">
             <label for="description_nodo">Description</label>
-            <textarea class="form-control" rows="5" id="description_nodo" name="description_nodo" ngModel #description_nodo="ngModel" value="{{description}}"></textarea>
+            <textarea class="form-control" rows="5" id="description_nodo" name="description_nodo" [(ngModel)]="description"></textarea>
           </div>
           <div class="form-group">
             <label for="comment_nodo">Comment</label>
-            <textarea class="form-control" rows="5" id="comment_nodo" name="comment_nodo" ngModel #comment_nodo="ngModel" value="{{comment}}"></textarea>
+            <textarea class="form-control" rows="5" id="comment_nodo" name="comment_nodo" [(ngModel)]="comment"></textarea>
           </div>
           <div class="form-group">
             <label for="source_nodo">Source</label>
-            <input type="text" class="form-control" id="source_nodo" name="source_nodo" ngModel #source_nodo="ngModel" value="{{source}}">
+            <input type="text" class="form-control" id="source_nodo" name="source_nodo" [(ngModel)]="source">
           </div>
           <!--Contenido del nodo-->
           <div *ngIf="mostrar_contenido">
@@ -85,8 +113,8 @@
               <div *ngIf="tipo_nodo_elegido=='DV_ORDINAL'">
                 <li *ngFor="let nodo of contenido"><label><input type="radio" id="answer_{{nodo['text']}}" [value]="nodo['text']" name="optradio" ngModel> <b>{{nodo["numero"]+": "}} {{nodo["text"]}}</b>{{" ["+nodo["description"]+"]"}}</label> </li>
               </div>
-              <li><label><input type="radio" id="answe_nuevo" [value]="'nuevo'" name="optradio" ngModel>Crear Nuevo</label></li>
-              <li><label><input type="radio" id="answe_noCambiar" [value]="'noCambiar'" name="optradio" ngModel>No cambiar</label></li>
+              <li><label><input type="radio" id="answe_nuevo" value="nuevo" name="optradio" ngModel>Crear Nuevo</label></li>
+              <li><label><input type="radio" id="answe_noCambiar" value="noCambiar" name="optradio" ngModel>No cambiar</label></li>
 
             </ul>
             <label>{{mensajeEdicion}}</label>
@@ -106,7 +134,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary">Save change and close</button>
+          <button type="submit" class="btn btn-primary">save changes and exit</button>
         </form>
         
 

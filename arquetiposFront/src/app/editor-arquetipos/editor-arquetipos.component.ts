@@ -45,6 +45,8 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   
   mensajeAlerta:string 
   //set myData para mostrar los nodos con jsmind inicialmente
+
+  nombre_prueba = "ce mamo"
   crearData(obj){ 
     for (var k in obj)
     {
@@ -84,20 +86,31 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   LLenarModalDatosBase(nodo:any){
     if (nodo["tipo"])
       this.tipo = nodo["tipo"] 
+    else 
+      this.tipo = ""
     if (nodo["text"])
       this.text = nodo["text"]
+    else 
+      this.text = ""
     if (nodo["description"])
       this.description = nodo["description"]
+    else
+      this.description = ""
     if (nodo["comment"])
       this.comment = nodo["comment"]
+    else 
+      this.comment = ""
     if (nodo["source"])
       this.source = nodo["source"]
+    else
+      this.source = ""
 
-    console.log(this.tipo)
+    /*console.log(this.tipo)
     console.log(this.text)
     console.log(this.description)
     console.log(this.comment)
-    console.log(this.source)
+    console.log(this.source)*/
+
     //Se deselecciona el nodo del jsmind para no tener problemas en el modal
     this._jm.select_clear()
 
@@ -115,51 +128,62 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   insertarDatosNodoModal(arquetipo,id_nodo){//luego intentar mejorar num iteraciones 
     for (var k in arquetipo){
       if (typeof arquetipo[k] == "object" && arquetipo[k] !== null && !Array.isArray(arquetipo[k])){
-        if (id_nodo == arquetipo[k]["id_nodo"] && arquetipo[k]["tipo"] != "estructural"){ //si encuentra el nodo y no es de tipo estructural ya que esos no contienen datos
-          //console.log("tipo:",arquetipo[k]["tipo"])
-          if(arquetipo[k]["tipo"] != "info"){
-            this.limpiarAtributosNodos()
-            //this.contenido = []
-            this.id_nodo_editar = id_nodo
-            this.tipo_nodo_elegido = arquetipo[k]["tipo"]
-            this.mostrar_contenido = true
+        if (id_nodo == arquetipo[k]["id_nodo"]){ //si encuentra el nodo y no es de tipo estructural ya que esos no contienen datos
+              //console.log("id: ",id_nodo)
+              if (arquetipo[k]["tipo"] != "estructural"){
+                if(arquetipo[k]["tipo"] != "info"){
+                  this.limpiarAtributosNodos()
+                  //this.contenido = []
+                  this.id_nodo_editar = id_nodo
+                  this.tipo_nodo_elegido = arquetipo[k]["tipo"]
+                  this.mostrar_contenido = true
+                  
+                  this.LLenarModalDatosBase(arquetipo[k])
+                  this.contenido = arquetipo[k]["contenido"]
+                  //Mensaje por defecto para el contenido de la mayoria de los nodos
+                  this.mensajeContenido = "Contenido"
+                  this.mensajeEdicion = "Editar contenido"
+
+                  $('#modalTipo1').modal('show');
+
+                  if(arquetipo[k]["tipo"] == "CHOICE"){
+                    this.mensajeContenido = "Choice of"
+                    this.mensajeEdicion = "Editar opciones disponibles"
+                  }
+                  else if(arquetipo[k]["tipo"] == "DV_CODED_TEXT"){
+
+                  }
+                  else if(arquetipo[k]["tipo"] == "DV_ORDINAL"){
+
+                  }
+                  /*else if(arquetipo[k]["tipo"] == "careflow_step"){
+                    $('#modalTipo1').modal('toggle');
+                    alert("no para careflow_step")
+                  }*/
+                  
+                  else{
+                    this.mostrar_contenido = false
+
+                  }
+                }
+                else{
+                  this.info_text = arquetipo[k]["text"]
+                  this.info_value = arquetipo[k]["value"]
+                  this.info_is_lista = Array.isArray(arquetipo[k]["value"]) 
             
-            this.LLenarModalDatosBase(arquetipo[k])
-            this.contenido = arquetipo[k]["contenido"]
-            //Mensaje por defecto para el contenido de la mayoria de los nodos
-            this.mensajeContenido = "Contenido"
-            this.mensajeEdicion = "Editar contenido"
+                  $('#modalTipoInfo').modal('show');
 
-            $('#modalTipo1').modal('show');
+                }
+              }
+              else {//Si es un estructural
+                this.limpiarAtributosNodos()
+                this.id_nodo_editar = id_nodo
+                this.LLenarModalDatosBase(arquetipo[k])
 
-            if(arquetipo[k]["tipo"] == "CHOICE"){
-              this.mensajeContenido = "Choice of"
-              this.mensajeEdicion = "Editar opciones disponibles"
-            }
-            else if(arquetipo[k]["tipo"] == "DV_CODED_TEXT"){
-
-            }
-            else if(arquetipo[k]["tipo"] == "DV_ORDINAL"){
-
-            }
-            /*else if(arquetipo[k]["tipo"] == "careflow_step"){
-              $('#modalTipo1').modal('toggle');
-              alert("no para careflow_step")
-            }*/
-            
-            else{
-              this.mostrar_contenido = false
-
-            }
-          }
-          else{
-            this.info_text = arquetipo[k]["text"]
-            this.info_value = arquetipo[k]["value"]
-            this.info_is_lista = Array.isArray(arquetipo[k]["value"]) 
-       
-            $('#modalTipoInfo').modal('show');
-
-          }
+                //alert("intento abrir un estructural")
+                $('#modalTipoEstructural').modal('show');
+                
+              }
 
             
           //abrir modal
@@ -176,7 +200,20 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     if(!!selected_node){//Si selecciono un nodo
       var id_nodo = selected_node.id
       //realizar busqueda
-      this.insertarDatosNodoModal(this.arquetipo,id_nodo)
+      //si el nodo es base 
+      if (id_nodo == "nodo1"){
+        //alert("ya csm..")
+        this.limpiarAtributosNodos()
+        this.id_nodo_editar = id_nodo
+        this.text = this.nombre_arquetipo
+        this._jm.select_clear()
+                //alert("intento abrir un estructural")
+        $('#modalTipoEstructural').modal('show');
+      }
+      else{
+        this.insertarDatosNodoModal(this.arquetipo,id_nodo)
+      }
+      
 
 
     }else{
@@ -197,27 +234,45 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   }
  
   BuscarEditarNodo(arquetipo,nuevo_data_nodo){//luego intentar mejorar num iteraciones 
-    for (var k in arquetipo){
-      if (typeof arquetipo[k] == "object" && arquetipo[k] !== null && !Array.isArray(arquetipo[k])){
-        if (this.id_nodo_editar == arquetipo[k]["id_nodo"]){ //si encuentra el nodo
+    console.log(this.id_nodo_editar)
+    if(this.id_nodo_editar == "nodo1"){
+      arquetipo["text"] = nuevo_data_nodo["nombre"]
+      this.nombre_arquetipo = arquetipo["text"]
+      this._jm.update_node(this.id_nodo_editar, arquetipo["text"]);
+    }
+    else{
 
-          arquetipo[k]["tipo"] = nuevo_data_nodo["tipo"]
-          arquetipo[k]["text"] = nuevo_data_nodo["text"]
-          arquetipo[k]["description"] = nuevo_data_nodo["description"]
-          arquetipo[k]["comment"] = nuevo_data_nodo["comment"]
-          arquetipo[k]["source"] = nuevo_data_nodo["source"]
+    
+      for (var k in arquetipo){
+        if (typeof arquetipo[k] == "object" && arquetipo[k] !== null && !Array.isArray(arquetipo[k])){
+          if (this.id_nodo_editar == arquetipo[k]["id_nodo"]){ //si encuentra el nodo
+            //console.log(nuevo_data_nodo)
+            if (nuevo_data_nodo["nombre"])
+            { 
+              arquetipo[k]["text"] = nuevo_data_nodo["nombre"]
+              
+              
+            }else{
+              arquetipo[k]["tipo"] = nuevo_data_nodo["tipo"]
+              arquetipo[k]["text"] = nuevo_data_nodo["text"]
+              arquetipo[k]["description"] = nuevo_data_nodo["description"]
+              arquetipo[k]["comment"] = nuevo_data_nodo["comment"]
+              arquetipo[k]["source"] = nuevo_data_nodo["source"]
 
-          arquetipo[k]["contenido"] = this.contenido
+              arquetipo[k]["contenido"] = this.contenido
+              
+            }
 
-          this._jm.update_node(this.id_nodo_editar, nuevo_data_nodo["text"]);
-
-          
+            this._jm.update_node(this.id_nodo_editar, arquetipo[k]["text"]);
 
             
-          //abrir modal
 
+              
+            //abrir modal
+
+          }
+          this.BuscarEditarNodo(arquetipo[k],nuevo_data_nodo);
         }
-        this.BuscarEditarNodo(arquetipo[k],nuevo_data_nodo);
       }
     }
     return arquetipo
@@ -254,11 +309,19 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   //cuando hace clic en editar en el modal, esta funcion toma y procesa los nuevos datos y llama
   // a BuscarEditarNodo que buscara nuevamente el nodo y lo editara con los nuevos datos
 
+  editarNodoEstructural(datos_modal_3: NgForm){
+    console.log("editaremos un estructural!")
+    //console.log(datos_modal_3.value)
+    this.arquetipo = this.BuscarEditarNodo(this.arquetipo, datos_modal_3.value);
+  }
   editarNodoTipo2(datos_modal_2: NgForm){
     //console.log("Modal tipo dos: coded text")
+    console.log(datos_modal_2.value)
+    console.log(this.contenido)
+    
     if(this.tipo_nodo_elegido == "CHOICE" || this.tipo_nodo_elegido == "DV_CODED_TEXT" || this.tipo_nodo_elegido == "DV_ORDINAL"){
       var opcion_elegida_contenido = datos_modal_2.value["optradio"]
-      console.log("tipo nodo: ",this.tipo_nodo_elegido)
+      //console.log("tipo nodo: ",this.tipo_nodo_elegido)
       if(opcion_elegida_contenido!= "noCambiar"){
         var nombre_nodo = datos_modal_2.value["nombre_nodo_contenido"]
         var description_nodo = datos_modal_2.value["description_nodo_contenido"]
@@ -291,9 +354,9 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
 
         var nuevo_data_nodo = this.obtenerDatosBase(datos_modal_2)
         this.arquetipo = this.BuscarEditarNodo(this.arquetipo,nuevo_data_nodo);
-        console.log("arquetipo editado")
-        console.log(this.arquetipo)
-        datos_modal_2.reset()
+        //console.log("arquetipo editado")
+        //console.log(this.arquetipo)
+        //datos_modal_2.reset()
         
       }
       
@@ -304,8 +367,8 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
 
       var nuevo_data_nodo = this.obtenerDatosBase(datos_modal_2)
       this.arquetipo = this.BuscarEditarNodo(this.arquetipo,nuevo_data_nodo);
-      console.log("arquetipo editado")
-      console.log(this.arquetipo)
+      //console.log("arquetipo editado")
+      //console.log(this.arquetipo)
       datos_modal_2.reset()
 
     }
