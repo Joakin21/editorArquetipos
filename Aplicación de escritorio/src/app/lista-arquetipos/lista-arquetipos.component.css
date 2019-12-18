@@ -1,0 +1,12 @@
+
+#listaArqueripos{
+    background-color:#F1F3CE;
+}
+.arquetiposAgregados{
+    float: left;
+    width: 200px;
+    height: 100px;
+    margin: 1em;
+    background-color: aqua;
+}
+
