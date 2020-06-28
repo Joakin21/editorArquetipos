@@ -1,6 +1,54 @@
 
 <app-menu [arquetipoElegido]="nombre_arquetipo"></app-menu>
+<!--<div>
+  <div class="w-50 mt-3 mx-auto">
+    <form #datos_nuevo_arquetipo="ngForm" (ngSubmit)="nuevoArquetipo(datos_nuevo_arquetipo)" novalidate>
+      <div class="form-group">
+        <label for="nuevo_arquetipo">Archetype Name:</label>
+        <input type="text" class="form-control" id="nuevo_arquetipo"  name="nuevo_arquetipo" ngModel #nuevo_arquetipo="ngModel" required>
+      </div>
+      <div class="form-group">
+        <label for="tipo_arquetipo">Type:</label>
+        <select class="form-control" ngModel name="tipo_arquetipo" id="tipo_arquetipo" required> 
+          <option>cluster</option>
+          <option>composition</option>
+          <option>action</option>
+          <option>admin_entry</option>
+          <option>evaluation</option>
+          <option>instruction</option>
+          <option>observation</option>
+          <option>section</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="concept_description">Concept description</label>
+        <textarea class="form-control" ngModel name="concept_description" id="concept_description" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="purpose">Purpose</label>
+        <textarea class="form-control" ngModel name="purpose" id="purpose" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="use">Use</label>
+        <textarea class="form-control" ngModel name="use" id="use" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="misuse">Misuse</label>
+        <textarea class="form-control" ngModel name="misuse" id="misuse" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="references">References</label>
+        <textarea class="form-control" ngModel name="references" id="references" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="original_author">Original author:</label>
+        <input type="text" class="form-control" ngModel name="original_author" id="original_author" required> 
+      </div>
 
+      <button type="submit" class="btn btn-primary ">Create</button>
+    </form>
+  </div>
+</div>-->
 <div id="editor">
     <h4 class="text-center m-2">Diagram</h4>
     <p class="text-center text-info">{{mensajeAlerta}}</p>
@@ -16,23 +64,16 @@
             <button (click)="guardarArquetipo()" class="btn btn-primary m-2">Save changes</button>
             <a class="btn btn-primary m-2" role="button" id="downloadAnchorElem" (click)="crearArchivoJson()" href="" download="">Download as json</a>
           </div>
+          <div *ngIf="!arquetipo">
+            <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#modalCrearArquetipo">Create Archetype</button>
+          </div>
+
+     
 
         </div>
       </div>
       <div class="col-md-12 col-lg-10">
         <div id="jsmind_container">
-          <div *ngIf="arquetipo_id=='nuevo arquetipo'">
-            <div class="w-50 mt-3 mx-auto">
-              <form #datos_nuevo_arquetipo="ngForm" (ngSubmit)="nuevoArquetipo(datos_nuevo_arquetipo)" novalidate>
-                <div class="form-group">
-                  <label for="nuevo_arquetipo">Nombre Arquetipo:</label>
-                  <input type="text" class="form-control" id="nuevo_arquetipo"  name="nuevo_arquetipo" ngModel #nuevo_arquetipo="ngModel" required> <!--value="{{text}}"-->
-                </div>
-                <button type="submit" class="btn btn-primary ">Create</button>
-              </form>
-            </div>
-          </div>
-
         </div>
         
       </div>
@@ -213,6 +254,71 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel and close</button>
       </div>
       
+    </div>
+  </div>
+</div>
+
+<!--Modal para crear un arquetipo con datos base-->
+<div class="modal fade" id="modalCrearArquetipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> New Archetype</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #datos_nuevo_arquetipo="ngForm" (ngSubmit)="nuevoArquetipo(datos_nuevo_arquetipo)" novalidate>
+          <div class="form-group">
+            <label for="nuevo_arquetipo">Archetype Name:</label>
+            <input type="text" class="form-control" id="nuevo_arquetipo"  name="nuevo_arquetipo" ngModel #nuevo_arquetipo="ngModel" required>
+          </div>
+          <div class="form-group">
+            <label for="tipo_arquetipo">Type:</label>
+            <select class="form-control" ngModel name="tipo_arquetipo" id="tipo_arquetipo" required> 
+              <option>cluster</option>
+              <option>composition</option>
+              <option>action</option>
+              <option>admin_entry</option>
+              <option>evaluation</option>
+              <option>instruction</option>
+              <option>observation</option>
+              <option>section</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="concept_description">Concept description</label>
+            <textarea class="form-control" ngModel name="concept_description" id="concept_description" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="purpose">Purpose</label>
+            <textarea class="form-control" ngModel name="purpose" id="purpose" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="use">Use</label>
+            <textarea class="form-control" ngModel name="use" id="use" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="misuse">Misuse</label>
+            <textarea class="form-control" ngModel name="misuse" id="misuse" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="references">References</label>
+            <textarea class="form-control" ngModel name="references" id="references" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="original_author">Original author:</label>
+            <input type="text" class="form-control" ngModel name="original_author" id="original_author" required> 
+          </div>
+    
+          <button type="submit" class="btn btn-primary ">Create</button>
+        </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
 </div>

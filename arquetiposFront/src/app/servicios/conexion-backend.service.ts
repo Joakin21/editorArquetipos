@@ -28,9 +28,18 @@ export class ConexionBackendService {
   getArquetipoById(id_arq:string): Observable<any>{
     return this.httpClient.get<any>(this.url_import+id_arq+"/");
   }
-
+  /*
+  postPatient(patient_journey:any): Observable<any>{
+    httpOptions.headers = httpOptions.headers.set('Authorization', this.getToken());
+    return this.httpClient.post(this.url_pacientes + patient_journey["rut"] + "/", patient_journey, httpOptions )
+  }
+  */
+  postArquetipo(arquetipo:any): Observable<any>{
+    return this.httpClient.post(this.url_import + "none" + "/", arquetipo)
+  }
   updateArquetipo(arquetipo:any): Observable<any>{
-    return this.httpClient.put<any>(this.url_import+arquetipo["_id"]+"/", arquetipo);
+    //return this.httpClient.put(this.url_pacientes + patient_journey["rut"] + "/", patient_journey, httpOptions )
+    return this.httpClient.put(this.url_import + arquetipo["_id"] + "/", arquetipo);
   }
 
   deleteArquetipo(id_arq:string): Observable<any>{

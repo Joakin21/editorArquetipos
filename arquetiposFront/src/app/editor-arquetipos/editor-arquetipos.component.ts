@@ -44,9 +44,10 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   selected_node:any
   
   mensajeAlerta:string 
+
+  //show_form_new_archetype:boolean = false
   //set myData para mostrar los nodos con jsmind inicialmente
 
-  nombre_prueba = "ce mamo"
   crearData(obj){ 
     for (var k in obj)
     {
@@ -356,7 +357,7 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
         this.arquetipo = this.BuscarEditarNodo(this.arquetipo,nuevo_data_nodo);
         //console.log("arquetipo editado")
         //console.log(this.arquetipo)
-        //datos_modal_2.reset()
+        datos_modal_2.reset()
         
       }
       
@@ -540,19 +541,87 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   }
 
   nuevoArquetipo(datos_nuevo_arquetipo: NgForm){
+    //this.show_form_new_archetype = false
     console.log(datos_nuevo_arquetipo.value)
     //crear estructutra base
     this.arquetipo = {}
-    //this.arquetipo["_id"] = "77jajajojojeje99"//mongodb genera el id automaticamente
+    //nodo root
     this.arquetipo["text"] = datos_nuevo_arquetipo.value["nuevo_arquetipo"]
     this.arquetipo["tipo"] = "base"
     this.arquetipo["id_nodo"] = "nodo1"
+    this.arquetipo["tipo_arquetipo"] = datos_nuevo_arquetipo.value["tipo_arquetipo"].toUpperCase()//"OBSERVATION"
+    //prueba description
+    this.arquetipo["estructura1"] = {}
+    this.arquetipo["estructura1"]["id_nodo"] = "nodo2"
+    this.arquetipo["estructura1"]["text"] = "description"
+    this.arquetipo["estructura1"]["tipo"] = "estructural"
+
+    this.arquetipo["estructura1"]["nodo1"] = {}
+    this.arquetipo["estructura1"]["nodo1"]["id_nodo"] = "nodo3"
+    this.arquetipo["estructura1"]["nodo1"]["text"] = "concept description"
+    this.arquetipo["estructura1"]["nodo1"]["tipo"] = "info"
+    this.arquetipo["estructura1"]["nodo1"]["value"] = datos_nuevo_arquetipo.value["concept_description"]
+
+    this.arquetipo["estructura1"]["nodo2"] = {}
+    this.arquetipo["estructura1"]["nodo2"]["id_nodo"] = "nodo4"
+    this.arquetipo["estructura1"]["nodo2"]["text"] = "purpose"
+    this.arquetipo["estructura1"]["nodo2"]["tipo"] = "info"
+    this.arquetipo["estructura1"]["nodo2"]["value"] = datos_nuevo_arquetipo.value["purpose"]
+
+    this.arquetipo["estructura1"]["nodo3"] = {}
+    this.arquetipo["estructura1"]["nodo3"]["id_nodo"] = "nodo5"
+    this.arquetipo["estructura1"]["nodo3"]["text"] = "use"
+    this.arquetipo["estructura1"]["nodo3"]["tipo"] = "info"
+    this.arquetipo["estructura1"]["nodo3"]["value"] = datos_nuevo_arquetipo.value["use"]
+
+    this.arquetipo["estructura1"]["nodo4"] = {}
+    this.arquetipo["estructura1"]["nodo4"]["id_nodo"] = "nodo6"
+    this.arquetipo["estructura1"]["nodo4"]["text"] = "misuse"
+    this.arquetipo["estructura1"]["nodo4"]["tipo"] = "info"
+    this.arquetipo["estructura1"]["nodo4"]["value"] = datos_nuevo_arquetipo.value["misuse"]
+
+    this.arquetipo["estructura1"]["nodo5"] = {}
+    this.arquetipo["estructura1"]["nodo5"]["id_nodo"] = "nodo7"
+    this.arquetipo["estructura1"]["nodo5"]["text"] = "references"
+    this.arquetipo["estructura1"]["nodo5"]["tipo"] = "info"
+    this.arquetipo["estructura1"]["nodo5"]["value"] = datos_nuevo_arquetipo.value["references"]
+
+    //prueba attribution
+    this.arquetipo["estructura2"] = {}
+    this.arquetipo["estructura2"]["id_nodo"] = "nodo8"
+    this.arquetipo["estructura2"]["text"] = "attribution"
+    this.arquetipo["estructura2"]["tipo"] = "estructural"
+
+    this.arquetipo["estructura2"]["nodo1"] = {}
+    this.arquetipo["estructura2"]["nodo1"]["id_nodo"] = "nodo9"
+    this.arquetipo["estructura2"]["nodo1"]["text"] = "original author"
+    this.arquetipo["estructura2"]["nodo1"]["tipo"] = "info"
+    this.arquetipo["estructura2"]["nodo1"]["value"] = datos_nuevo_arquetipo.value["original_author"]
+
+
+
+
 
     //limpiar jsmind_container
-    document.getElementById("jsmind_container").innerHTML = ""
+    //document.getElementById("jsmind_container").innerHTML = ""
     //agregar nodo root al jsmind_container
+    /*this.myData.push({"id":arquetipo["id_nodo"], "isroot":true, "topic":arquetipo["text"]})
+    this.crearData(arquetipo)*/
+
     this.myData.push({"id":this.arquetipo["id_nodo"], "isroot":true, "topic":this.arquetipo["text"]})
+    this.crearData(this.arquetipo)
     this.configurarJsMind()
+
+    //cargar en la db
+    this.conexBack.postArquetipo(this.arquetipo).subscribe(
+      data => {
+        this.arquetipo["_id"] = data["_id"]
+        console.log( this.arquetipo)
+      },
+      error => {
+        console.log('error', error)
+      }
+    );
     
   }
 
@@ -568,10 +637,6 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     this.elegirArquetipo.currentArquetipo.subscribe(id_arq => {
       this.arquetipo_id = id_arq
     })
-    
-  }
-
-  ngAfterViewInit(){
     console.log("id: ",this.arquetipo_id)
     //this.jsPlumbInstance = jsPlumb.getInstance();
     if(this.arquetipo_id==null){
@@ -580,6 +645,8 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     }
     else if(this.arquetipo_id=="nuevo arquetipo"){
       console.log(this.arquetipo_id)
+      $('#modalCrearArquetipo').modal('show');
+      //this.show_form_new_archetype = true
       
     }
     else{
@@ -589,6 +656,10 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
         //this.conexionesDiagramaImportado(jsPlumb,this.jsPlumbInstance,arquetipo,this.contador_nodos)
       })
     }
+  }
+
+  ngAfterViewInit(){
+    
 
   }
 
