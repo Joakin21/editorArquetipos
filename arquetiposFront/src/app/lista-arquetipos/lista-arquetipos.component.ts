@@ -16,7 +16,25 @@ export class ListaArquetiposComponent implements OnInit {
   //arquetipos: any[]
   divs_arquetipos = []
 
+  usuario_logeado:string = ""
   ngOnInit() {
+
+    /*if(!this.conexBack.getToken()){//si no hay token
+      //this.router.navigateByUrl('')
+      location.href ="http://localhost:4200/";
+      //alert("No estas logeado")
+    }
+    //Apenas inicia el componente obtenemos el usuario
+    this.conexBack.getUser(parseInt(this.conexBack.getIdUser())).subscribe(
+      data => {
+        this.usuario_logeado = data.user.username
+        alert(data.user.username)
+        //var id_profesional = data.user.id
+      },
+      error => {
+        console.log('error', error)
+      }
+    );*/
     
     this.conexBack.getArquetipos().subscribe(resp => this.arquetiposFromDB(resp));
 

@@ -45,6 +45,7 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   
   mensajeAlerta:string 
 
+  usuario_logeado:string = ""
   //show_form_new_archetype:boolean = false
   //set myData para mostrar los nodos con jsmind inicialmente
 
@@ -320,59 +321,17 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     console.log(datos_modal_2.value)
     console.log(this.contenido)
     
-    if(this.tipo_nodo_elegido == "CHOICE" || this.tipo_nodo_elegido == "DV_CODED_TEXT" || this.tipo_nodo_elegido == "DV_ORDINAL"){
-      var opcion_elegida_contenido = datos_modal_2.value["optradio"]
-      //console.log("tipo nodo: ",this.tipo_nodo_elegido)
-      if(opcion_elegida_contenido!= "noCambiar"){
-        var nombre_nodo = datos_modal_2.value["nombre_nodo_contenido"]
-        var description_nodo = datos_modal_2.value["description_nodo_contenido"]
-        if(this.tipo_nodo_elegido == "DV_ORDINAL"){
-          var numero_nodo = datos_modal_2.value["numero_nodo_contenido"]
-        }
-        if(opcion_elegida_contenido!= "nuevo"){//Si quiere cambiar el contenido de uno de los nodos
-          for (var i=0; i< this.contenido.length; i++){
-            if(this.contenido[i]["text"] == opcion_elegida_contenido){
-              this.contenido[i]["text"] = nombre_nodo
-              this.contenido[i]["description"] = description_nodo
-              if(this.tipo_nodo_elegido == "DV_ORDINAL"){
-                this.contenido[i]["numero"] = numero_nodo
-              }
-            }
-          }
-        }
-        else{//Si va por crear nuevo
-          
-          if(this.tipo_nodo_elegido == "DV_ORDINAL"){
-            this.contenido.push({"text":nombre_nodo, "description":description_nodo, "numero":numero_nodo})
-            
-          }else{
-            this.contenido.push({"text":nombre_nodo, "description":description_nodo})
-          }
-        }
-      }
-      else{//si no cambia en contenido, cierro el modal
-        $('#modalTipo1').modal('toggle');
-
-        var nuevo_data_nodo = this.obtenerDatosBase(datos_modal_2)
-        this.arquetipo = this.BuscarEditarNodo(this.arquetipo,nuevo_data_nodo);
-        //console.log("arquetipo editado")
-        //console.log(this.arquetipo)
-        datos_modal_2.reset()
-        
-      }
-      
-    }
     //Si es de tipo uno (los que solo contienen los datos base)
-    else{
-      $('#modalTipo1').modal('toggle');
+    
+    $('#modalTipo1').modal('toggle');
 
-      var nuevo_data_nodo = this.obtenerDatosBase(datos_modal_2)
-      this.arquetipo = this.BuscarEditarNodo(this.arquetipo,nuevo_data_nodo);
-      //console.log("arquetipo editado")
-      //console.log(this.arquetipo)
-      datos_modal_2.reset()
+    var nuevo_data_nodo = this.obtenerDatosBase(datos_modal_2)
+    this.arquetipo = this.BuscarEditarNodo(this.arquetipo,nuevo_data_nodo);
+    //console.log("arquetipo editado")
+    //console.log(this.arquetipo)
+    datos_modal_2.reset()
 
-    }
+    
     this.mensajeAlerta = "hay nuevos cambios realizados en el diagrama"
     
   }
@@ -633,6 +592,17 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   }
   
   ngOnInit() {
+    //obtener usuario logeado
+    this.conexBack.getUser(parseInt(this.conexBack.getIdUser())).subscribe(
+      data => {
+        this.usuario_logeado = data.user.username
+        //alert(data.user.username)
+        //var id_profesional = data.user.id
+      },
+      error => {
+        console.log('error', error)
+      }
+    );
     //Obtengo id del arquetipo importado
     this.elegirArquetipo.currentArquetipo.subscribe(id_arq => {
       this.arquetipo_id = id_arq

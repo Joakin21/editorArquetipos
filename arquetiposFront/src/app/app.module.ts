@@ -10,6 +10,7 @@ import { ListaArquetiposComponent } from './lista-arquetipos/lista-arquetipos.co
 import { MenuComponent } from './menu/menu.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 
 const routes: Routes = [
   {path:'editor', component: EditorArquetiposComponent},
@@ -33,7 +34,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
