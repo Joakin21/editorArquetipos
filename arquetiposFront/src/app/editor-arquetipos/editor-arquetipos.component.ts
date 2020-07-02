@@ -7,6 +7,7 @@ import { AlertPromise } from 'selenium-webdriver';
 import {ConexionBackendService} from '../servicios/conexion-backend.service'
 import {NgForm, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
+//import { log } from 'console';
 
 declare var $:any;
 declare var jsMind:any
@@ -261,7 +262,7 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
               arquetipo[k]["comment"] = nuevo_data_nodo["comment"]
               arquetipo[k]["source"] = nuevo_data_nodo["source"]
 
-              arquetipo[k]["contenido"] = this.contenido
+              arquetipo[k]["contenido"] = nuevo_data_nodo["contenido"]//this.contenido
               
             }
 
@@ -303,7 +304,25 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
     if(source == "" || source == null)
       source = this.source
 
-    var nuevo_data_nodo = {"tipo":tipo,"text":text,  "description":description, "comment":comment, "source":source}
+    var contenido = []
+    for(let i = 0; i < this.contenido.length; i++){
+      //console.log(datos_modal.value["contenido_description"+i.toString()])
+      let contenido_text = datos_modal.value["contenido_text"+i.toString()]
+      let contenido_description = datos_modal.value["contenido_description"+i.toString()]
+      
+      if(this.tipo_nodo_elegido == "DV_ORDINAL"){
+        let contenido_numero = datos_modal.value["contenido_numero"+i.toString()]
+        contenido.push({"text":contenido_text, "description":contenido_description, "numero":contenido_numero})
+      }
+      else {
+        contenido.push({"text":contenido_text, "description":contenido_description})
+      }
+      //this.contenido[i]["description"] = contenido_description
+      
+    }
+    console.log(this.tipo_nodo_elegido)
+    //console.log(contenido)
+    var nuevo_data_nodo = {"tipo":tipo,"text":text,  "description":description, "comment":comment, "source":source, "contenido":contenido}
     
     return nuevo_data_nodo
   }
@@ -318,14 +337,16 @@ export class EditorArquetiposComponent implements OnInit,AfterViewInit {
   }
   editarNodoTipo2(datos_modal_2: NgForm){
     //console.log("Modal tipo dos: coded text")
-    console.log(datos_modal_2.value)
-    console.log(this.contenido)
+    console.log("nuevo_data_nodo!!!:")
+    //console.log(datos_modal_2.value)
+    //console.log(this.contenido)
     
     //Si es de tipo uno (los que solo contienen los datos base)
     
     $('#modalTipo1').modal('toggle');
 
     var nuevo_data_nodo = this.obtenerDatosBase(datos_modal_2)
+    console.log(nuevo_data_nodo)
     this.arquetipo = this.BuscarEditarNodo(this.arquetipo,nuevo_data_nodo);
     //console.log("arquetipo editado")
     //console.log(this.arquetipo)

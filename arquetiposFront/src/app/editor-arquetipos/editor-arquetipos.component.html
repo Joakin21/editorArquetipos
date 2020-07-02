@@ -147,12 +147,32 @@
           <div *ngIf="mostrar_contenido">
             <label>{{mensajeContenido}}</label>
             <ul>
-                <!--<input id="enum_answer_{{enum.name}}" [value]='enum.name' type="radio" name="enums" [(ngModel)]="radioSelected">-->
-              <div *ngIf="tipo_nodo_elegido!='DV_ORDINAL'">
-                <li *ngFor="let nodo of contenido"><label><b>{{nodo["text"]}}</b>{{" ["+nodo["description"]+"]"}}</label> </li>
-              </div>
+              <!--
               <div *ngIf="tipo_nodo_elegido=='DV_ORDINAL'">
-                <li *ngFor="let nodo of contenido"><label><b>{{nodo["numero"]+": "}} {{nodo["text"]}}</b>{{" ["+nodo["description"]+"]"}}</label> </li>
+                
+                <div class="form-group">
+                  <input type="text" class="form-control" id="{{'contenido_numero'+i.toString()}}"  name="{{'contenido_numero'+i.toString()}}" [(ngModel)]="contenido[i]['numero']"> 
+                </div>
+              </div>
+              -->
+              <!--<li *ngFor="let nodo of contenido"><label><b>{{nodo["numero"]+": "}} {{nodo["text"]}}</b>{{" ["+nodo["description"]+"]"}}</label> </li>-->
+              <div *ngIf="tipo_nodo_elegido=='DV_ORDINAL' || tipo_nodo_elegido=='DV_CODED_TEXT' || tipo_nodo_elegido=='CHOICE'">
+                <!--*ngFor="let item of items; let i = index"-->
+                <li *ngFor="let nodo of contenido; let i = index">
+
+                  <div *ngIf="tipo_nodo_elegido=='DV_ORDINAL'" class="form-group w-25">
+                    <input type="text" class="form-control" id="{{'contenido_numero'+i.toString()}}"  name="{{'contenido_numero'+i.toString()}}" [(ngModel)]="contenido[i]['numero']"> 
+                  </div>
+
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="{{'contenido_text'+i.toString()}}"  name="{{'contenido_text'+i.toString()}}" [(ngModel)]="contenido[i]['text']"> 
+                  </div>
+                  
+                  <div class="form-group">
+                    <textarea class="form-control" rows="" id="{{'contenido_description'+i.toString()}}" name="{{'contenido_description'+i.toString()}}" [(ngModel)]="contenido[i]['description']"></textarea>
+                  </div>
+                  <!--<label><b>{{contenido[i]['text']}}</b>{{" ["+nodo["description"]+"]"}}</label>-->
+                </li>
               </div>
               
             </ul>
