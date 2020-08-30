@@ -19,7 +19,7 @@ export class ConexionBackendService {
 
   //url_import = 'http://127.0.0.1:8000/';
   url_import = 'http://127.0.0.1:8000/arquetipos/';
-  url_users = 'http://127.0.0.1:8000/users/'
+  url_users = 'http://127.0.0.1:8000/adminPatientJourney/'
 
   constructor(private httpClient:HttpClient, private cookies: CookieService) { }
 

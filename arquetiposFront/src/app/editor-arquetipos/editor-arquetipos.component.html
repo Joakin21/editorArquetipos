@@ -158,7 +158,10 @@
               <!--<li *ngFor="let nodo of contenido"><label><b>{{nodo["numero"]+": "}} {{nodo["text"]}}</b>{{" ["+nodo["description"]+"]"}}</label> </li>-->
               <div *ngIf="tipo_nodo_elegido=='DV_ORDINAL' || tipo_nodo_elegido=='DV_CODED_TEXT' || tipo_nodo_elegido=='CHOICE'">
                 <!--*ngFor="let item of items; let i = index"-->
-                <li *ngFor="let nodo of contenido; let i = index">
+                <li *ngFor="let nodo of contenido; let i = index; trackBy: trackItem" class="border m-2 p-2">
+                  <button type="button" (click)="deleteContenidoNodo(i)" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
 
                   <div *ngIf="tipo_nodo_elegido=='DV_ORDINAL'" class="form-group w-25">
                     <input type="text" class="form-control" id="{{'contenido_numero'+i.toString()}}"  name="{{'contenido_numero'+i.toString()}}" [(ngModel)]="contenido[i]['numero']"> 
@@ -172,6 +175,9 @@
                     <textarea class="form-control" rows="" id="{{'contenido_description'+i.toString()}}" name="{{'contenido_description'+i.toString()}}" [(ngModel)]="contenido[i]['description']"></textarea>
                   </div>
                   <!--<label><b>{{contenido[i]['text']}}</b>{{" ["+nodo["description"]+"]"}}</label>-->
+                </li>
+                <li>
+                  <button type="button" (click)="agrgarNodoToContenido()" class="btn btn-primary">Nuevo</button>
                 </li>
               </div>
               
@@ -228,28 +234,62 @@
         </button>
       </div>
       <div class="modal-body">
-        <form #datos_conf_nuevo_nodo="ngForm" (ngSubmit)="crearNuevoNodo(datos_conf_nuevo_nodo)" novalidate>
+          <!-- <form [formGroup]="createPatientForm" (ngSubmit)="createPatient()"> -->
+        <form [formGroup]="createNewNodoForm" (ngSubmit)="crearNuevoNodo()">
           <div *ngIf="nuevo_nodo_is_estructural">
+
             <div class="form-group">
               <label for="nombre">Name</label>
-              <input type="text" class="form-control" id="nombre"  name="nombre" ngModel #nombre="ngModel" required> <!--value="{{text}}"-->
+              <input type="text" class="form-control" id="nombre"  formControlName="nombre" required> <!--value="{{text}}"-->
             </div>
+            <div *ngIf="createNewNodoForm.controls['nombre'].invalid && (createNewNodoForm.controls['nombre'].dirty || createNewNodoForm.controls['nombre'].touched)" class="alert alert-danger">
+              <div *ngIf="createNewNodoForm.controls['nombre'].errors.required">
+                Node Name is required.
+              </div>
+            </div>
+
             <p>Tipo: Estructural</p>
           </div>
+
           <div *ngIf="nuevo_nodo_is_estructural == false">
+
             <div class="form-group">
-                <label for="nombre">Name</label>
-                <input type="text" class="form-control" id="nombre"  name="nombre" ngModel #nombre="ngModel" required> <!--value="{{text}}"-->
+              <label for="nombre">Name</label>
+              <input type="text" class="form-control" id="nombre"  formControlName="nombre" required> <!--value="{{text}}"-->
+            </div>
+            <div *ngIf="createNewNodoForm.controls['nombre'].invalid && (createNewNodoForm.controls['nombre'].dirty || createNewNodoForm.controls['nombre'].touched)" class="alert alert-danger">
+              <div *ngIf="createNewNodoForm.controls['nombre'].errors.required">
+                Node Name is required.
               </div>
+            </div>
+
             <div class="form-group">
-                <select class="form-control" id="tipo" name="tipo" #tipo="ngModel" ngModel required>
-                  
-                  <option *ngFor="let tab of ['DV_TEXT','DV_CODED_TEXT','CHOICE','DV_ORDINAL','CLUSTER', 'careflow_step']" [value]="tab">{{tab}}</option>
-                  
+                <label for="tipo">Type:</label>
+                <select class="form-control" id="tipo" formControlName="tipo" required>
+                  <!--<option *ngFor="let tab of ['DV_TEXT','DV_CODED_TEXT','CHOICE','DV_ORDINAL','CLUSTER', 'DV_QUANTITY', 'DV_COUNT', 'DV_DATE_TIME', 'DV_DATE', 'DV_BOOLEAN']" [value]="tab">{{tab}}</option>-->
+                  <option>DV_TEXT</option>
+                  <option>DV_CODED_TEXT</option>
+                  <option>CHOICE</option>
+                  <option>DV_ORDINAL</option>
+                  <option>CLUSTER</option>
+                  <option>DV_QUANTITY</option>
+                  <option>DV_COUNT</option>
+                  <option>DV_DATE_TIME</option>
+                  <option>DV_DATE</option>
+                  <option>DV_BOOLEAN</option>
                 </select>
             </div>
+            <div *ngIf="createNewNodoForm.controls['tipo'].invalid && (createNewNodoForm.controls['tipo'].dirty || createNewNodoForm.controls['tipo'].touched)" class="alert alert-danger">
+              <div *ngIf="createNewNodoForm.controls['tipo'].errors.required">
+                Node type is required.
+              </div>
+            </div>
+
           </div>
+          <!--
           <button type="submit" class="btn btn-primary">Save and close</button>
+          -->
+          <button type="submit" [disabled]="createNewNodoForm.pristine || createNewNodoForm.invalid" class="btn btn-primary ">Create</button>
         </form>
       </div>
 
@@ -272,14 +312,24 @@
         </button>
       </div>
       <div class="modal-body">
-        <form #datos_nuevo_arquetipo="ngForm" (ngSubmit)="nuevoArquetipo(datos_nuevo_arquetipo)" novalidate>
+        <!--
+          <form [formGroup]="createNewArchetypeForm" (ngSubmit)="nuevoArquetipo()">
+        -->
+        <form [formGroup]="createNewArchetypeForm" (ngSubmit)="nuevoArquetipo()">
+
           <div class="form-group">
-            <label for="nuevo_arquetipo">Archetype Name:</label>
-            <input type="text" class="form-control" id="nuevo_arquetipo"  name="nuevo_arquetipo" ngModel #nuevo_arquetipo="ngModel" required>
+            <label for="name">Archetype Name:</label>
+            <input type="text" class="form-control" id="name"  formControlName="name" required>
           </div>
+          <div *ngIf="createNewArchetypeForm.controls['name'].invalid && (createNewArchetypeForm.controls['name'].dirty || createNewArchetypeForm.controls['name'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['name'].errors.required">
+              Archetype Name is required.
+            </div>
+          </div>
+
           <div class="form-group">
-            <label for="tipo_arquetipo">Type:</label>
-            <select class="form-control" ngModel name="tipo_arquetipo" id="tipo_arquetipo" required> 
+            <label for="type">Type:</label>
+            <select class="form-control" id="type" formControlName="type" required> 
               <option>cluster</option>
               <option>composition</option>
               <option>action</option>
@@ -290,32 +340,76 @@
               <option>section</option>
             </select>
           </div>
+          <div *ngIf="createNewArchetypeForm.controls['type'].invalid && (createNewArchetypeForm.controls['type'].dirty || createNewArchetypeForm.controls['type'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['type'].errors.required">
+              Type is required.
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="concept_description">Concept description</label>
-            <textarea class="form-control" ngModel name="concept_description" id="concept_description" rows="3"></textarea>
+            <textarea class="form-control" id="concept_description" formControlName="concept_description" rows="3" required></textarea>
           </div>
+          <div *ngIf="createNewArchetypeForm.controls['concept_description'].invalid && (createNewArchetypeForm.controls['concept_description'].dirty || createNewArchetypeForm.controls['concept_description'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['concept_description'].errors.required">
+              Concept description is required.
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="purpose">Purpose</label>
-            <textarea class="form-control" ngModel name="purpose" id="purpose" rows="3"></textarea>
+            <textarea class="form-control" id="purpose" formControlName="purpose" rows="3" required></textarea>
           </div>
+          <div *ngIf="createNewArchetypeForm.controls['purpose'].invalid && (createNewArchetypeForm.controls['purpose'].dirty || createNewArchetypeForm.controls['purpose'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['purpose'].errors.required">
+              Purpose is required.
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="use">Use</label>
-            <textarea class="form-control" ngModel name="use" id="use" rows="3"></textarea>
+            <textarea class="form-control" id="use" formControlName="use" rows="3" required></textarea>
           </div>
+          <div *ngIf="createNewArchetypeForm.controls['use'].invalid && (createNewArchetypeForm.controls['use'].dirty || createNewArchetypeForm.controls['use'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['use'].errors.required">
+              Use is required.
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="misuse">Misuse</label>
-            <textarea class="form-control" ngModel name="misuse" id="misuse" rows="3"></textarea>
+            <textarea class="form-control" id="misuse" formControlName="misuse" rows="3" required></textarea>
           </div>
+          <div *ngIf="createNewArchetypeForm.controls['misuse'].invalid && (createNewArchetypeForm.controls['misuse'].dirty || createNewArchetypeForm.controls['misuse'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['misuse'].errors.required">
+              Misuse is required.
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="references">References</label>
-            <textarea class="form-control" ngModel name="references" id="references" rows="3"></textarea>
+            <textarea class="form-control" id="references" formControlName="references" rows="3" required></textarea>
           </div>
+          <div *ngIf="createNewArchetypeForm.controls['references'].invalid && (createNewArchetypeForm.controls['references'].dirty || createNewArchetypeForm.controls['references'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['references'].errors.required">
+              References is required.
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="original_author">Original author:</label>
-            <input type="text" class="form-control" ngModel name="original_author" id="original_author" required> 
+            <input type="text" class="form-control" id="original_author" formControlName="original_author" required> 
           </div>
-    
-          <button type="submit" class="btn btn-primary ">Create</button>
+          <div *ngIf="createNewArchetypeForm.controls['original_author'].invalid && (createNewArchetypeForm.controls['original_author'].dirty || createNewArchetypeForm.controls['original_author'].touched)" class="alert alert-danger">
+            <div *ngIf="createNewArchetypeForm.controls['original_author'].errors.required">
+              Original author is required.
+            </div>
+          </div>
+
+          <!--
+            <button type="submit" [disabled]="createPatientForm.pristine || createPatientForm.invalid" class="btn btn-primary ">Create</button>
+          -->
+          <button type="submit" [disabled]="createNewArchetypeForm.pristine || createNewArchetypeForm.invalid" class="btn btn-primary ">Create</button>
         </form>
         
       </div>

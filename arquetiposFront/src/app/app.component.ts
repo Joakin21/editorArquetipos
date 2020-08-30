@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
     //Apenas inicia el componente obtenemos el usuario
     this.conexBack.getUser(parseInt(this.conexBack.getIdUser())).subscribe(
       data => {
-        this.usuario_logeado = data.user.username
+        this.usuario_logeado = data.username
         //alert(data.user.username+" from app component xd!")
         //var id_profesional = data.user.id
       },

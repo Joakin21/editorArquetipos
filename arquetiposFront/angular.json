@@ -30,7 +30,8 @@
             ],
             "scripts": [
               "node_modules/jsmind/js/jsmind.js",
-              "node_modules/jsmind/js/jsmind.draggable.js"
+              "node_modules/jsmind/js/jsmind.draggable.js",
+              "node_modules/jsmind/js/jsmind.screenshot.js"
             ]
           },
           "configurations": {
